@@ -55,7 +55,8 @@
 			float4 frag(v2f i) : SV_Target
 			{
 				float4 src = tex2D(_MainTex, i.uv);
-				float noise = random(i.uv * _ScreenParams * _Time) * _StaticIntensity;
+				float rand = random(i.uv * _ScreenParams * _Time.y);
+				float noise = rand * _StaticIntensity;
 				src += float4(noise, noise, noise, 0);
 				return src;
 			}
