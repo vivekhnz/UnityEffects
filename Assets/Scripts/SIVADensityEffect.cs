@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class SIVADensityEffect : MonoBehaviour
 {
+    private static readonly int STATIC_PATTERN_STEPS = 24;
+
     public Material EffectMaterial;
     public float StaticIntensity = 0.25f;
+    public float StaticPatternDurationSeconds = 3f;
 
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
     void Update()
     {
-        float t = (Time.time * 8) % 24;
+        float t = (Time.time * (STATIC_PATTERN_STEPS / StaticPatternDurationSeconds)) % STATIC_PATTERN_STEPS;
         float intensity = 0;
         if (t < 4 || t > 6 && t < 8)
         {
