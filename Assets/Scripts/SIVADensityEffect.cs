@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class SIVADensityEffect : MonoBehaviour
 {
     public Material EffectMaterial;
