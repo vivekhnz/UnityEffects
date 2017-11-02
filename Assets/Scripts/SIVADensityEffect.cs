@@ -10,11 +10,16 @@ public class SIVADensityEffect : MonoBehaviour
     public float StaticIntensity = 0.25f;
     public float StaticPatternDurationSeconds = 3f;
 
+    [Range(1, 64)]
+    public int NoiseUnitSize = 4;
+
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
     /// </summary>
     void Update()
     {
+        EffectMaterial.SetTexture("_Noise", GenerateNoiseVectors(
+            Camera.main.pixelWidth / NoiseUnitSize, Camera.main.pixelHeight / NoiseUnitSize));
         EffectMaterial.SetFloat("_StaticIntensity", CalculateStaticIntensity() * StaticIntensity);
     }
 
@@ -26,6 +31,20 @@ public class SIVADensityEffect : MonoBehaviour
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
         Graphics.Blit(src, dest, EffectMaterial);
+    }
+
+    private Texture GenerateNoiseVectors(int width, int height)
+    {
+        Texture2D texture = new Texture2D(width, height, TextureFormat.Alpha8, false);
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                texture.SetPixel(x, y, new Color(0, 0, 0, Random.Range(0f, 1f)));
+            }
+        }
+        texture.Apply();
+        return texture;
     }
 
     private float CalculateStaticIntensity()

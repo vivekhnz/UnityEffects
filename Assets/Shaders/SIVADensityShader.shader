@@ -3,7 +3,7 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_StaticIntensity ("Static intensity", Float) = 0.25 
+		_StaticIntensity ("Static intensity", Float) = 0.25
 	}
 	SubShader
 	{
@@ -18,7 +18,9 @@
 			
 			#include "UnityCG.cginc"
 
+			sampler2D _MainTex;
 			float _StaticIntensity;
+			sampler2D _Noise;
 
 			struct appdata
 			{
@@ -32,16 +34,6 @@
 				float4 vertex : SV_POSITION;
 			};
 
-			// adapted from https://stackoverflow.com/questions/5149544/can-i-generate-a-random-number-inside-a-pixel-shader/10625698#10625698
-			float random(float2 p)
-			{
-				float2 K1 = float2(
-					23.14069263277926, // e^pi (Gelfond's constant)
-					2.665144142690225 // 2^sqrt(2) (Gelfondâ€“Schneider constant)
-				);
-				return frac(cos(dot(p,K1)) * 12345.6789);
-			}
-
 			v2f vert(appdata v)
 			{
 				v2f o;
@@ -49,14 +41,11 @@
 				o.uv = v.uv;
 				return o;
 			}
-			
-			sampler2D _MainTex;
 
 			float4 frag(v2f i) : SV_Target
 			{
 				float4 src = tex2D(_MainTex, i.uv);
-				float rand = random(i.uv * _ScreenParams * _Time.y);
-				float noise = rand * _StaticIntensity;
+				float noise = tex2D(_Noise, i.uv).a * _StaticIntensity;
 				src += float4(noise, noise, noise, 0);
 				return src;
 			}

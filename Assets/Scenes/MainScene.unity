@@ -445,7 +445,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EffectMaterial: {fileID: 2100000, guid: 26afa1b7ac1168248b46568fc15472c5, type: 2}
-  StaticIntensity: 0.2
+  StaticIntensity: 0.1
+  StaticPatternDurationSeconds: 3
+  NoiseUnitSize: 4
 --- !u!1 &341402356
 GameObject:
   m_ObjectHideFlags: 0
