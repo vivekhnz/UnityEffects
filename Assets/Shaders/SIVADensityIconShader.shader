@@ -17,6 +17,7 @@
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
+			float _HorizontalOffset;
 
 			struct appdata
 			{
@@ -33,7 +34,9 @@
 			v2f vert(appdata v)
 			{
 				v2f o;
-				o.vertex = UnityObjectToClipPos(v.vertex);
+
+				o.vertex = UnityObjectToClipPos(v.vertex) + float4(
+					_HorizontalOffset * -0.05, 0, 0, 0);
 				o.uv = v.uv;
 				return o;
 			}

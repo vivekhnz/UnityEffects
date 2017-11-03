@@ -50,7 +50,8 @@ public class SIVADensityBackgroundEffect : MonoBehaviour
     private float CalculateStaticIntensity()
     {
         // calculate current progress through the pattern
-        float t = (Time.time * (STATIC_PATTERN_STEPS / StaticPatternDurationSeconds)) % STATIC_PATTERN_STEPS;
+        float t = (Time.time * (STATIC_PATTERN_STEPS / StaticPatternDurationSeconds)) %
+            STATIC_PATTERN_STEPS;
 
         if (t < 4 || t > 6 && t < 8)
         {
