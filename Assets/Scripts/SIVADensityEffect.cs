@@ -18,7 +18,7 @@ public class SIVADensityEffect : MonoBehaviour
     /// </summary>
     void Update()
     {
-        EffectMaterial.SetTexture("_Noise", GenerateNoiseVectors(
+        EffectMaterial.SetTexture("_Noise", GenerateNoiseTexture(
             Camera.main.pixelWidth / NoiseUnitSize, Camera.main.pixelHeight / NoiseUnitSize));
         EffectMaterial.SetFloat("_StaticIntensity", CalculateStaticIntensity() * StaticIntensity);
     }
@@ -33,7 +33,7 @@ public class SIVADensityEffect : MonoBehaviour
         Graphics.Blit(src, dest, EffectMaterial);
     }
 
-    private Texture GenerateNoiseVectors(int width, int height)
+    private Texture GenerateNoiseTexture(int width, int height)
     {
         Texture2D texture = new Texture2D(width, height, TextureFormat.Alpha8, false);
         for (int y = 0; y < height; y++)

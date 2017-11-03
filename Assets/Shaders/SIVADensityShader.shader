@@ -44,9 +44,24 @@
 
 			float4 frag(v2f i) : SV_Target
 			{
-				float4 src = tex2D(_MainTex, i.uv);
-				float noise = tex2D(_Noise, i.uv).a * _StaticIntensity;
-				src += float4(noise, noise, noise, 0);
+				// apply abberation to UVs
+				float2 center = float2(0.5, 0.5);
+				float2 rUV = i.uv;
+				float2 gUV = lerp(i.uv, center, 0.05 * _StaticIntensity);
+				float2 bUV = lerp(i.uv, center, 0.1 * _StaticIntensity);
+
+				// sample input texture
+				float r = tex2D(_MainTex, rUV).r;
+				float g = tex2D(_MainTex, gUV).g;
+				float b = tex2D(_MainTex, bUV).b;
+				float4 src = float4(r, g, b, 1);
+				
+				// add static noise
+				src += float4(
+					tex2D(_Noise, rUV).a * _StaticIntensity,
+					tex2D(_Noise, gUV).a * _StaticIntensity,
+					tex2D(_Noise, bUV).a * _StaticIntensity, 0);
+				
 				return src;
 			}
 			ENDCG
