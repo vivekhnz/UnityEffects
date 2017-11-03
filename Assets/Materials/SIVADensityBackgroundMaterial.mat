@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SIVADensityMaterial
+  m_Name: SIVADensityBackgroundMaterial
   m_Shader: {fileID: 4800000, guid: bac43036a7ede4546893d936794e61dd, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -54,6 +54,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SIVALogo:
+        m_Texture: {fileID: 2800000, guid: 4f16d8a619060a145b89606862825315, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -69,7 +73,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StaticIntensity: 0.011977202
+    - _StaticIntensity: 0
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:

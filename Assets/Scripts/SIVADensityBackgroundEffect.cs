@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SIVADensityEffect : MonoBehaviour
+public class SIVADensityBackgroundEffect : MonoBehaviour
 {
     private static readonly int STATIC_PATTERN_STEPS = 24;
 

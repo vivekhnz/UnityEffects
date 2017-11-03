@@ -1,4 +1,4 @@
-﻿Shader "Custom/SIVADensityShader"
+﻿Shader "Custom/SIVADensity/Background"
 {
 	Properties
 	{
@@ -21,6 +21,7 @@
 			sampler2D _MainTex;
 			float _StaticIntensity;
 			sampler2D _Noise;
+			sampler2D _SIVALogo;
 
 			struct appdata
 			{
@@ -61,7 +62,7 @@
 					tex2D(_Noise, rUV).a * _StaticIntensity,
 					tex2D(_Noise, gUV).a * _StaticIntensity,
 					tex2D(_Noise, bUV).a * _StaticIntensity, 0);
-				
+
 				return src;
 			}
 			ENDCG
