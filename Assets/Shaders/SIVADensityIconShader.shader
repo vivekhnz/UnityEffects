@@ -47,7 +47,7 @@
 			{
 				v2f o;
 
-				o.vertex = UnityObjectToClipPos(v.vertex) + float4(
+				o.vertex = UnityObjectToClipPos(v.vertex * 2) + float4(
 					_HorizontalOffset * -0.05, 0, 0, 0);
 				o.uv = v.uv;
 				return o;
@@ -55,18 +55,21 @@
 
 			float4 frag(v2f i) : SV_Target
 			{
-				float sliceSize = 0.01;
-				float slice = floor(i.uv.y / sliceSize) * sliceSize;
-				float progress = (i.uv.y % sliceSize) / sliceSize;
-				// slice = lerp(0.5, slice, (i.uv.y % sliceSize) / sliceSize);
-				float sliceOffset = random(float2(0, slice) * _ScreenParams * _Time);
-				float distortion = lerp(0, sliceOffset, cos(progress * PI));
+				float2 scaledUV = (i.uv * 2) - float2(0.5, 0.5);
+
+				float timeScale = 10;
+				float time = floor(_Time.y * timeScale) + 1;
+				float sliceSize = 0.015;
+				float slice = floor(scaledUV.y / sliceSize) * sliceSize;
+				float progress = (scaledUV.y % sliceSize) / sliceSize;
+				float sliceOffset = random(float2(0, slice) * _ScreenParams * time);
+				float distortion = cos(progress * PI) * sliceOffset;
 				float offset = distortion * 0.15;
 
-				float2 uv = i.uv + float2(offset, 0);
+				float2 uv = scaledUV + float2(offset, 0);
 
 				float4 src = tex2D(_MainTex, uv);
-				return float4(src.rgb, src.a * 0.05);
+				return float4(src.rgb, src.a * 0.075);
 			}
 			ENDCG
 		}
