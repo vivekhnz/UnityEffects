@@ -60,12 +60,28 @@ public class SIVADensityIconEffect : MonoBehaviour
         float t = (Time.time * (DISTORTION_PATTERN_STEPS / DistortionPatternDurationSeconds)) %
             DISTORTION_PATTERN_STEPS;
 
-        if (t < 4 || (t > 8 && t < 12) || (t > 16 && t < 18) || (t > 26 && t < 28) ||
-            (t > 30 && t < 32) || t > 34)
+        float distortion = 0;
+        if (t < 12)
         {
-            return 1;
+            distortion = Mathf.Sin((Mathf.PI * t) / 4);
         }
-        return 0;
+        else if (t > 16 && t < 18)
+        {
+            distortion = Mathf.Sin((Mathf.PI * t) / 2);
+        }
+        else if (t > 26 && t < 32)
+        {
+            distortion = -Mathf.Sin((Mathf.PI * t) / 2);
+        }
+        else if (t > 34)
+        {
+            distortion = Mathf.Sin((Mathf.PI * (t - 4)) / 5);
+        }
+        else
+        {
+            return 0;
+        }
+        return Mathf.Max(Mathf.Pow(distortion, 3), 0);
     }
 
     private float CalculateOpacity()

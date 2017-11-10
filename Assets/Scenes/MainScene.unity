@@ -3604,4 +3604,4 @@ MonoBehaviour:
   JitterDelaySeconds: 4
   DistortionAmplitude: 0.15
   Opacity: 0.05
-  DistortionPatternDurationSeconds: 4
+  DistortionPatternDurationSeconds: 3
