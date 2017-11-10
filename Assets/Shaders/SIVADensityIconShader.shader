@@ -3,6 +3,11 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		_NormalizedJitterOffset ("Normalized jitter offset", Float) = -0.05
+		_DistortionTimeScale ("Distortion time scale", Float) = 10
+		_DistortionSliceSize ("Distortion slice size", Float) = 0.015
+		_DistortionAmplitude ("Distortion amplitude", Float) = 0.15
+		_Opacity ("Opacity", Float) = 0.075
 	}
 	SubShader
 	{
@@ -19,6 +24,12 @@
 			static const float PI = 3.14159265f;
 
 			sampler2D _MainTex;
+			float _NormalizedJitterOffset;
+			float _DistortionTimeScale;
+			float _DistortionSliceSize;
+			float _DistortionAmplitude;
+			float _Opacity;
+
 			float _HorizontalOffset;
 
 			struct appdata
@@ -48,7 +59,7 @@
 				v2f o;
 
 				o.vertex = UnityObjectToClipPos(v.vertex * 2) + float4(
-					_HorizontalOffset * -0.05, 0, 0, 0);
+					_HorizontalOffset * _NormalizedJitterOffset, 0, 0, 0);
 				o.uv = v.uv;
 				return o;
 			}
@@ -57,19 +68,15 @@
 			{
 				float2 scaledUV = (i.uv * 2) - float2(0.5, 0.5);
 
-				float timeScale = 10;
-				float time = floor(_Time.y * timeScale) + 1;
-				float sliceSize = 0.015;
-				float slice = floor(scaledUV.y / sliceSize) * sliceSize;
-				float progress = (scaledUV.y % sliceSize) / sliceSize;
-				float sliceOffset = random(float2(0, slice) * _ScreenParams * time);
-				float distortion = cos(progress * PI) * sliceOffset;
-				float offset = distortion * 0.15;
+				float time = floor(_Time.y * _DistortionTimeScale) + 1;
+				float slice = floor(scaledUV.y / _DistortionSliceSize) * _DistortionSliceSize;
+				float sliceProgress = (scaledUV.y % _DistortionSliceSize) / _DistortionSliceSize;
+				float sliceOffset = random(slice * _ScreenParams * time);
+				float distortion = cos(sliceProgress * PI) * sliceOffset;
+				float offset = distortion * _DistortionAmplitude;
 
-				float2 uv = scaledUV + float2(offset, 0);
-
-				float4 src = tex2D(_MainTex, uv);
-				return float4(src.rgb, src.a * 0.075);
+				float4 src = tex2D(_MainTex, scaledUV + float2(offset, 0));
+				return float4(src.rgb, src.a * _Opacity);
 			}
 			ENDCG
 		}
