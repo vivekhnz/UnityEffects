@@ -6,8 +6,13 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class SIVADensityIconEffect : MonoBehaviour
 {
+    private static readonly int DISTORTION_PATTERN_STEPS = 44;
+
     public float JitterDurationSeconds = 0.1f;
     public float JitterDelaySeconds = 4f;
+    public float DistortionAmplitude = 0.15f;
+    public float Opacity = 0.075f;
+    public float DistortionPatternDurationSeconds = 10.0f;
 
     private Material material;
 
@@ -26,6 +31,8 @@ public class SIVADensityIconEffect : MonoBehaviour
     void Update()
     {
         material.SetFloat("_HorizontalOffset", CalculateHorizontalOffset());
+        material.SetFloat("_DistortionAmplitude", CalculateDistortion() * DistortionAmplitude);
+        material.SetFloat("_Opacity", CalculateOpacity() * Opacity);
     }
 
     private float CalculateHorizontalOffset()
@@ -45,5 +52,32 @@ public class SIVADensityIconEffect : MonoBehaviour
             // snap to right
             return 0;
         }
+    }
+
+    private float CalculateDistortion()
+    {
+        // calculate current progress through the pattern
+        float t = (Time.time * (DISTORTION_PATTERN_STEPS / DistortionPatternDurationSeconds)) %
+            DISTORTION_PATTERN_STEPS;
+
+        if (t < 4 || (t > 8 && t < 12) || (t > 16 && t < 18) || (t > 26 && t < 28) ||
+            (t > 30 && t < 32) || t > 34)
+        {
+            return 1;
+        }
+        return 0;
+    }
+
+    private float CalculateOpacity()
+    {
+        // calculate current progress through the pattern
+        float t = (Time.time * (DISTORTION_PATTERN_STEPS / DistortionPatternDurationSeconds)) %
+            DISTORTION_PATTERN_STEPS;
+
+        if ((t > 34 && t < 35) || t > 43)
+        {
+            return 0;
+        }
+        return 1;
     }
 }

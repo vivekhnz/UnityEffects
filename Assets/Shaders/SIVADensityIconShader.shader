@@ -6,8 +6,6 @@
 		_NormalizedJitterOffset ("Normalized jitter offset", Float) = -0.05
 		_DistortionTimeScale ("Distortion time scale", Float) = 10
 		_DistortionSliceSize ("Distortion slice size", Float) = 0.015
-		_DistortionAmplitude ("Distortion amplitude", Float) = 0.15
-		_Opacity ("Opacity", Float) = 0.075
 	}
 	SubShader
 	{
