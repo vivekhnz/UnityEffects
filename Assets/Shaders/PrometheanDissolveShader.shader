@@ -2,12 +2,17 @@
 {
 	Properties
 	{
-		_DissolveOrigin ("Dissolve origin", Vector) = (0,0,0)
 		_DissolveRadius ("Dissolve radius", Float) = 0
 	}
     SubShader
 	{
-      Tags { "RenderType"="Opaque" "Queue"="Geometry+1" "ForceNoShadowCasting"="True" }
+      Tags
+      {
+          "Queue"="Transparent"
+          "IgnoreProjector"="True"
+          "RenderType"="Transparent"
+          "ForceNoShadowCasting"="True"
+      }
       CGPROGRAM
       #pragma surface surf Lambert decal:blend
 
