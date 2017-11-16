@@ -18,6 +18,7 @@ public class PrometheanDissolveEffect : MonoBehaviour
 
     void Update()
     {
+        material.SetVector("_Scale", transform.localScale);
         if (isDissolving)
         {
             float t = Time.time - dissolveTime;
