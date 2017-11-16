@@ -7,6 +7,7 @@
 		_DissolveRadius ("Dissolve radius", Float) = 0
 		_FringeTexture ("Fringe texture", 2D) = "white" {}
 		_FringeRadius ("Fringe radius", Float) = 0.5
+		_CracksTexture ("Cracks texture", 2D) = "white" {}
 	}
     
     CGINCLUDE
@@ -17,11 +18,13 @@
     float _DissolveRadius;
     sampler2D _FringeTexture;
     float _FringeRadius;
+    sampler2D _CracksTexture;
         
     struct Input
     {
         float4 color : COLOR;
         float3 worldPos;
+        float2 uv_CracksTexture;
     };
         
     void dissolveEffect(Input IN, inout SurfaceOutput o, float4 color)
@@ -67,7 +70,7 @@
         
         void surf (Input IN, inout SurfaceOutput o)
         {
-            dissolveEffect(IN, o, _OuterColor);
+            dissolveEffect(IN, o, _OuterColor * tex2D(_CracksTexture, IN.uv_CracksTexture));
         }
         
         ENDCG
