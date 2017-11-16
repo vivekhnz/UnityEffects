@@ -24,9 +24,11 @@ public class DissolveCursor : MonoBehaviour
 
     void Update()
     {
+        // determine what the reticle is pointed at
+        Transform camera = Camera.main.transform;
         RaycastHit hit;
         PrometheanDissolveEffect target = null;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit))
+        if (Physics.Raycast(camera.position, camera.forward, out hit))
         {
             var transform = hit.transform;
             target = transform.GetComponent<PrometheanDissolveEffect>();
