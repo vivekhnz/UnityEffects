@@ -42,7 +42,7 @@
         o.Albedo = color;
         o.Alpha = 1;
         
-        float dist = distance(_DissolveOrigin, IN.worldPos) + _CracksRadius;
+        float dist = distance(_DissolveOrigin, IN.worldPos);
         clip(dist - _DissolveRadius);
         if (dist < _DissolveRadius + _CracksRadius)
         {
