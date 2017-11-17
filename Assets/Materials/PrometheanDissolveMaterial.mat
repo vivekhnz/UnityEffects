@@ -65,6 +65,7 @@ Material:
     m_Floats:
     - _BumpScale: 1
     - _CracksRadius: 0.7
+    - _CracksTextureScale: 0.33
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DissolveRadius: 0

@@ -4,31 +4,37 @@
 	{
 		_OuterColor ("Outer color", Color) = (0.5, 0.5, 0.5, 1)
 		_InnerColor ("Inner color", Color) = (0.25, 0.25, 0.25, 1)
+
 		_DissolveRadius ("Dissolve radius", Float) = 0
+
 		_FringeTexture ("Fringe texture", 2D) = "white" {}
 		_FringeRadius ("Fringe radius", Float) = 0.5
+
 		_CracksTexture ("Cracks texture", 2D) = "white" {}
 		_CracksRadius ("Cracks radius", Float) = 1
+		_CracksTextureScale ("Cracks texture scale", Float) = 1
 	}
     
     CGINCLUDE
 
     float4 _OuterColor;
     float4 _InnerColor;
+
     float3 _DissolveOrigin;
     float _DissolveRadius;
+
     sampler2D _FringeTexture;
     float _FringeRadius;
+    
     sampler2D _CracksTexture;
     float _CracksRadius;
-    float2 _Scale;
+    float _CracksTextureScale;
         
     struct Input
     {
         float4 color : COLOR;
         float3 worldPos;
-        float2 uv_CracksTexture;
-        float3 Normal;
+        float3 worldNormal;
     };
         
     void dissolveEffect(Input IN, inout SurfaceOutput o, float4 color)
@@ -42,8 +48,14 @@
         {
             float fringeProgress = (dist - _DissolveRadius) / _CracksRadius;
             float4 fringeColour = tex2D(_FringeTexture, float2(fringeProgress, 0));
-            float2 texcoord = IN.uv_CracksTexture / dot(_Scale, IN.Normal);
-            o.Emission = tex2D(_CracksTexture, texcoord) * fringeColour.rgb * fringeColour.a;
+
+            // calculate world space UVs
+            float2 uv = IN.worldPos.xz;
+            if (abs(IN.worldNormal.x) > 0.5) uv = IN.worldPos.yz;
+            if (abs(IN.worldNormal.z) > 0.5) uv = IN.worldPos.xy;
+            uv *= _CracksTextureScale;
+            
+            o.Emission = tex2D(_CracksTexture, uv) * fringeColour.rgb * fringeColour.a;
         }
         if (dist < _DissolveRadius + _FringeRadius)
         {
