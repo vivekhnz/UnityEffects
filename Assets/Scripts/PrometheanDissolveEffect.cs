@@ -12,10 +12,9 @@ public class PrometheanDissolveEffect : MonoBehaviour
     const string PARTICLES_SHAPE_POSITION = "ShapeModule.m_Position";
 
     public float DissolveUnitsPerSecond = 1;
-    public Mesh SphereMesh;
 
     private Material material;
-    private Mesh baseMesh;
+    private Material particleMaterial;
     private SerializedObject particlesRef;
 
     private bool isDissolving;
@@ -25,8 +24,13 @@ public class PrometheanDissolveEffect : MonoBehaviour
     void Start()
     {
         material = GetComponent<MeshRenderer>().material;
-        baseMesh = GetComponent<MeshFilter>().sharedMesh;
-        particlesRef = new SerializedObject(GetComponent<ParticleSystem>());
+        var mesh = GetComponent<MeshFilter>().sharedMesh;
+
+        var particles = GetComponent<ParticleSystem>();
+        particlesRef = new SerializedObject(particles);
+        particlesRef.FindProperty(PARTICLES_SHAPE_MESH).objectReferenceValue = mesh;
+        particlesRef.ApplyModifiedProperties();
+        particleMaterial = particles.GetComponent<ParticleSystemRenderer>().material;
 
         isDissolving = false;
     }
@@ -38,11 +42,12 @@ public class PrometheanDissolveEffect : MonoBehaviour
             float t = Time.time - dissolveTime;
             float radius = t * DissolveUnitsPerSecond;
             material.SetFloat("_DissolveRadius", radius);
-            UpdateParticleMesh(RebuildParticleMesh(radius));
+            particleMaterial.SetFloat("_DissolveRadius", radius);
         }
         else
         {
             material.SetFloat("_DissolveRadius", 0);
+            particleMaterial.SetFloat("_DissolveRadius", 0);
         }
     }
 
@@ -53,30 +58,8 @@ public class PrometheanDissolveEffect : MonoBehaviour
         dissolveOrigin = origin;
 
         material.SetVector("_DissolveOrigin", dissolveOrigin);
-    }
-
-    private Mesh RebuildParticleMesh(float radius)
-    {
-        Mesh sphere = new Mesh();
-
-        List<Vector3> verts = new List<Vector3>();
-        SphereMesh.GetVertices(verts);
-        sphere.SetVertices(verts.Select(v => v * radius).ToList());
-
-        List<Vector3> normals = new List<Vector3>();
-        SphereMesh.GetNormals(normals);
-        sphere.SetNormals(normals);
-
-        sphere.SetTriangles(SphereMesh.GetTriangles(0), 0);
-
-        return sphere;
-    }
-
-    private void UpdateParticleMesh(Mesh mesh)
-    {
-        particlesRef.FindProperty(PARTICLES_SHAPE_MESH).objectReferenceValue = mesh;
+        particleMaterial.SetVector("_DissolveOrigin", dissolveOrigin);
         particlesRef.FindProperty(PARTICLES_SHAPE_POSITION).vector3Value =
             transform.worldToLocalMatrix.MultiplyPoint(dissolveOrigin);
-        particlesRef.ApplyModifiedProperties();
     }
 }

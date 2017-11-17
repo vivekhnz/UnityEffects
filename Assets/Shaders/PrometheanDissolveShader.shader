@@ -5,8 +5,6 @@
 		_OuterColor ("Outer color", Color) = (0.5, 0.5, 0.5, 1)
 		_InnerColor ("Inner color", Color) = (0.25, 0.25, 0.25, 1)
 
-		_DissolveRadius ("Dissolve radius", Float) = 0
-
 		_FringeTexture ("Fringe texture", 2D) = "white" {}
 		_FringeRadius ("Fringe radius", Float) = 0.5
 
