@@ -8,6 +8,8 @@ using UnityEngine;
 public class PrometheanDissolveEffect : MonoBehaviour
 {
     public float DissolveUnitsPerSecond = 1;
+    public float ParticleFringeWidth = 0.01f;
+    public float ParticleSpacing = 0.2f;
 
     private Material material;
     private ParticleSystem particles;
@@ -33,38 +35,48 @@ public class PrometheanDissolveEffect : MonoBehaviour
     {
         if (isDissolving)
         {
+            // increase dissolve radius over time
             float t = Time.time - dissolveTime;
             float radius = t * DissolveUnitsPerSecond;
             material.SetFloat("_DissolveRadius", radius);
 
-            bool reachedStart = false;
-            for (int i = 0; i < particleSpawnPoints.Count; i++)
+            if (particleSpawnPoints.Count > 0)
             {
-                var point = particleSpawnPoints[i];
-                if (reachedStart)
+                if (particleSpawnPoints.Last().w < radius)
                 {
-                    if (point.w > radius + 0.16f)
+                    particleSpawnPoints.Clear();
+                }
+                for (int i = 0; i < particleSpawnPoints.Count; i++)
+                {
+                    // don't spawn particles within the dissolve radius
+                    if (particleSpawnPoints[i].w >= radius)
                     {
+                        particleSpawnPoints = particleSpawnPoints.Skip(i).ToList();
                         break;
                     }
                 }
-                else
+                foreach (var point in particleSpawnPoints)
                 {
-                    if (point.w < radius + 0.15)
+                    // don't spawn particles outside of the fringe
+                    if (point.w > radius + ParticleFringeWidth)
                     {
-                        continue;
+                        break;
                     }
-                    reachedStart = true;
-                    particleSpawnPoints = particleSpawnPoints.Skip(i).ToList();
-                    i = 0;
+
+                    // randomize particle velocity
+                    var direction = new Vector3(
+                        Random.Range(-1f, 1f),
+                        Random.Range(-1f, 1f),
+                        Random.Range(-1f, 1f));
+                    emission.velocity = direction * Random.Range(
+                        particles.main.startSpeed.constantMin,
+                        particles.main.startSpeed.constantMax);
+                    emission.angularVelocity3D = direction;
+
+                    // emit particle
+                    emission.position = (Vector3)point;
+                    particles.Emit(emission, 1);
                 }
-                emission.position = point;
-
-                var direction = new Vector3(Random.Range(-1, 1), Random.Range(-1, 1),
-                    Random.Range(-1, 1));
-                emission.velocity = direction * Random.Range(1.5f, 2.5f);
-
-                particles.Emit(emission, 1);
             }
         }
         else
@@ -78,16 +90,15 @@ public class PrometheanDissolveEffect : MonoBehaviour
         dissolveTime = Time.time;
         isDissolving = true;
         dissolveOrigin = origin;
-
         material.SetVector("_DissolveOrigin", dissolveOrigin);
 
+        // determine particle spawn points along mesh
         particleSpawnPoints.Clear();
-        float density = 0.2f;
-        for (float x = coll.bounds.min.x; x < coll.bounds.max.x; x += density)
+        for (float x = coll.bounds.min.x; x < coll.bounds.max.x; x += ParticleSpacing)
         {
-            for (float y = coll.bounds.min.y; y < coll.bounds.max.y; y += density)
+            for (float y = coll.bounds.min.y; y < coll.bounds.max.y; y += ParticleSpacing)
             {
-                for (float z = coll.bounds.min.z; z < coll.bounds.max.z; z += density)
+                for (float z = coll.bounds.min.z; z < coll.bounds.max.z; z += ParticleSpacing)
                 {
                     var point = coll.ClosestPoint(new Vector3(x, y, z));
                     particleSpawnPoints.Add(new Vector4(point.x, point.y, point.z,
@@ -95,6 +106,9 @@ public class PrometheanDissolveEffect : MonoBehaviour
                 }
             }
         }
+
+        // sort particle points by distance to dissolve origin so we can skip points outside
+        // of the dissolve radius
         particleSpawnPoints.Sort((a, b) => (int)Mathf.Sign(a.w - b.w));
     }
 }
