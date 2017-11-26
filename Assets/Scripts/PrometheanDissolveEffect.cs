@@ -43,14 +43,14 @@ public class PrometheanDissolveEffect : MonoBehaviour
                 var point = particleSpawnPoints[i];
                 if (reachedStart)
                 {
-                    if (point.w > radius + 0.11f)
+                    if (point.w > radius + 0.16f)
                     {
                         break;
                     }
                 }
                 else
                 {
-                    if (point.w < radius + 0.1)
+                    if (point.w < radius + 0.15)
                     {
                         continue;
                     }
@@ -59,6 +59,11 @@ public class PrometheanDissolveEffect : MonoBehaviour
                     i = 0;
                 }
                 emission.position = point;
+
+                var direction = new Vector3(Random.Range(-1, 1), Random.Range(-1, 1),
+                    Random.Range(-1, 1));
+                emission.velocity = direction * Random.Range(1.5f, 2.5f);
+
                 particles.Emit(emission, 1);
             }
         }
@@ -77,7 +82,7 @@ public class PrometheanDissolveEffect : MonoBehaviour
         material.SetVector("_DissolveOrigin", dissolveOrigin);
 
         particleSpawnPoints.Clear();
-        float density = 0.15f;
+        float density = 0.2f;
         for (float x = coll.bounds.min.x; x < coll.bounds.max.x; x += density)
         {
             for (float y = coll.bounds.min.y; y < coll.bounds.max.y; y += density)
