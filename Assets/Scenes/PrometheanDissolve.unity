@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 63050456}
   m_Layer: 0
   m_Name: Sphere
-  m_TagString: Dissolvable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -338,7 +338,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 528790130
+  randomSeed: 423304389
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -428,7 +428,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 0.9163286, b: 0.44852942, a: 1}
-      maxColor: {r: 1, g: 0.8235294, b: 0.21960784, a: 1}
+      maxColor: {r: 1, g: 0.68784314, b: 0.21960783, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -3721,7 +3721,7 @@ GameObject:
   - component: {fileID: 341584652}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Dissolvable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3866,7 +3866,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1782261698
+  randomSeed: -2102565555
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3956,7 +3956,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 0.9163286, b: 0.44852942, a: 1}
-      maxColor: {r: 1, g: 0.8235294, b: 0.21960784, a: 1}
+      maxColor: {r: 1, g: 0.68784314, b: 0.21960783, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -7261,7 +7261,7 @@ GameObject:
   - component: {fileID: 431917697}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Dissolvable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7407,7 +7407,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1451475013
+  randomSeed: 870623748
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -7497,7 +7497,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 0.9163286, b: 0.44852942, a: 1}
-      maxColor: {r: 1, g: 0.8235294, b: 0.21960784, a: 1}
+      maxColor: {r: 1, g: 0.68784314, b: 0.21960783, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -10802,7 +10802,7 @@ GameObject:
   - component: {fileID: 981723633}
   m_Layer: 0
   m_Name: Cylinder
-  m_TagString: Dissolvable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10949,7 +10949,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 146546661
+  randomSeed: 1847034684
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -11039,7 +11039,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 0.9163286, b: 0.44852942, a: 1}
-      maxColor: {r: 1, g: 0.8235294, b: 0.21960784, a: 1}
+      maxColor: {r: 1, g: 0.68784314, b: 0.21960783, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
