@@ -7,6 +7,7 @@ public class DissolveCursor : MonoBehaviour
 {
     public Color IdleCursorColor = Color.green;
     public Color DetectedCursorColor = Color.red;
+    public PrometheanDissolveEffect DissolveSource;
 
     private Image[] crosshairImages;
     private bool wasDetected;
@@ -27,11 +28,14 @@ public class DissolveCursor : MonoBehaviour
         // determine what the reticle is pointed at
         Transform camera = Camera.main.transform;
         RaycastHit hit;
-        PrometheanDissolveEffect target = null;
+        Transform target = null;
         if (Physics.Raycast(camera.position, camera.forward, out hit))
         {
             var transform = hit.transform;
-            target = transform.GetComponent<PrometheanDissolveEffect>();
+            if (transform.CompareTag("Dissolvable"))
+            {
+                target = transform;
+            }
         }
 
         // update crosshair colour
@@ -45,9 +49,19 @@ public class DissolveCursor : MonoBehaviour
         }
 
         // dissolve target
-        if (target != null && Input.GetAxis("Fire1") > 0)
+        if (target != null && Input.GetButtonDown("Fire1"))
         {
-            target.DissolveFrom(hit.point);
+            // ensure the target is not already dissolving
+            if (target.GetComponentInChildren<PrometheanDissolveEffect>() == null)
+            {
+                var source = Instantiate(DissolveSource);
+                var animator = target.GetComponentInParent<Animator>();
+                if (animator != null)
+                {
+                    animator.SetTrigger("OnKilled");
+                }
+                source.DissolveTarget(target, hit.point);
+            }
         }
 
         wasDetected = detected;

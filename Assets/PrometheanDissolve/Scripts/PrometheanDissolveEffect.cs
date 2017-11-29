@@ -4,111 +4,94 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshRenderer)), RequireComponent(typeof(ParticleSystem))]
+[RequireComponent(typeof(ParticleSystem))]
 public class PrometheanDissolveEffect : MonoBehaviour
 {
     public float DissolveUnitsPerSecond = 1;
-    public float ParticleFringeWidth = 0.01f;
-    public float ParticleSpacing = 0.2f;
+    public float ParticleFringeOffset = 0.0f;
+    public float ParticleFringeWidth = 0.5f;
+    public Material DissolveMaterial;
+    public Transform OuterSphere;
+    public Transform InnerSphere;
 
     private Material material;
     private ParticleSystem particles;
-    private Collider coll;
 
-    private bool isDissolving;
-    private Vector3 dissolveOrigin;
     private float dissolveTime = 0;
-    private ParticleSystem.EmitParams emission;
-    private List<Vector4> particleSpawnPoints;
+    private Vector3 parentScale;
+    private float maxRadius;
+    private GameObject target;
 
-    void Start()
+    void Awake()
     {
-        material = GetComponent<MeshRenderer>().material;
         particles = GetComponent<ParticleSystem>();
-        coll = GetComponent<Collider>();
-
-        isDissolving = false;
-        particleSpawnPoints = new List<Vector4>();
     }
 
     void Update()
     {
-        if (isDissolving)
+        // increase dissolve radius over time
+        float t = Time.time - dissolveTime;
+        float radius = t * DissolveUnitsPerSecond;
+        material.SetFloat("_DissolveRadius", radius);
+
+        // adjust trigger sphere scales
+        float outerRadius = radius + ParticleFringeOffset;
+        float innerRadius = outerRadius - ParticleFringeWidth;
+        OuterSphere.localScale = new Vector3(outerRadius / parentScale.x,
+            outerRadius / parentScale.y, outerRadius / parentScale.z);
+        InnerSphere.localScale = new Vector3(innerRadius / parentScale.x,
+            innerRadius / parentScale.y, innerRadius / parentScale.z);
+
+        // destroy target after radius has exceeded its bounds
+        if (radius > maxRadius)
         {
-            // increase dissolve radius over time
-            float t = Time.time - dissolveTime;
-            float radius = t * DissolveUnitsPerSecond;
-            material.SetFloat("_DissolveRadius", radius);
-
-            if (particleSpawnPoints.Count > 0)
-            {
-                if (particleSpawnPoints.Last().w < radius)
-                {
-                    particleSpawnPoints.Clear();
-                }
-                for (int i = 0; i < particleSpawnPoints.Count; i++)
-                {
-                    // don't spawn particles within the dissolve radius
-                    if (particleSpawnPoints[i].w >= radius)
-                    {
-                        particleSpawnPoints = particleSpawnPoints.Skip(i).ToList();
-                        break;
-                    }
-                }
-                foreach (var point in particleSpawnPoints)
-                {
-                    // don't spawn particles outside of the fringe
-                    if (point.w > radius + ParticleFringeWidth)
-                    {
-                        break;
-                    }
-
-                    // randomize particle velocity
-                    var direction = new Vector3(
-                        Random.Range(-1f, 1f),
-                        Random.Range(-1f, 1f),
-                        Random.Range(-1f, 1f));
-                    emission.velocity = direction * Random.Range(
-                        particles.main.startSpeed.constantMin,
-                        particles.main.startSpeed.constantMax);
-                    emission.angularVelocity3D = direction;
-
-                    // emit particle
-                    emission.position = (Vector3)point;
-                    particles.Emit(emission, 1);
-                }
-            }
-        }
-        else
-        {
-            material.SetFloat("_DissolveRadius", 0);
+            Destroy(target);
         }
     }
 
-    public void DissolveFrom(Vector3 origin)
+    public void DissolveTarget(Transform target, Vector3 dissolvePoint)
     {
-        dissolveTime = Time.time;
-        isDissolving = true;
-        dissolveOrigin = origin;
-        material.SetVector("_DissolveOrigin", dissolveOrigin);
-
-        // determine particle spawn points along mesh
-        particleSpawnPoints.Clear();
-        for (float x = coll.bounds.min.x; x < coll.bounds.max.x; x += ParticleSpacing)
+        // disable target's colliders
+        this.target = target.gameObject;
+        var colliders = target.GetComponentsInChildren<Collider>();
+        foreach (var collider in colliders)
         {
-            for (float y = coll.bounds.min.y; y < coll.bounds.max.y; y += ParticleSpacing)
-            {
-                for (float z = coll.bounds.min.z; z < coll.bounds.max.z; z += ParticleSpacing)
-                {
-                    var point = coll.ClosestPoint(new Vector3(x, y, z));
-                    particleSpawnPoints.Add(new Vector4(point.x, point.y, point.z,
-                        Vector3.Distance(dissolveOrigin, point)));
-                }
-            }
+            collider.enabled = false;
         }
 
-        // sort particle points by distance to dissolve origin so we can skip points outside
-        // of the dissolve radius
-        particleSpawnPoints.Sort((a, b) => (int)Mathf.Sign(a.w - b.w));
+        // attach to target
+        transform.SetParent(target);
+        material = new Material(DissolveMaterial);
+        transform.localScale = Vector3.one;
+        transform.position = target.position;
+        parentScale = target.lossyScale;
+
+        // retrieve target mesh
+        var skinnedMeshRenderer = target.GetComponent<SkinnedMeshRenderer>();
+        var shape = particles.shape;
+        if (skinnedMeshRenderer == null)
+        {
+            shape.shapeType = ParticleSystemShapeType.Mesh;
+            shape.mesh = target.GetComponent<MeshFilter>().mesh;
+        }
+        else
+        {
+            shape.shapeType = ParticleSystemShapeType.SkinnedMeshRenderer;
+            shape.skinnedMeshRenderer = skinnedMeshRenderer;
+        }
+
+        // initialize material
+        var renderer = target.GetComponent<Renderer>();
+        renderer.material = material;
+        dissolveTime = Time.time;
+        maxRadius = Mathf.Max(renderer.bounds.size.x, renderer.bounds.size.y,
+            renderer.bounds.size.z) * 2;
+        material.SetVector("_DissolveOrigin", dissolvePoint);
+
+        // initialize trigger spheres
+        OuterSphere.transform.position = dissolvePoint;
+        OuterSphere.transform.localScale = Vector3.zero;
+        InnerSphere.transform.position = dissolvePoint;
+        InnerSphere.transform.localScale = Vector3.zero;
     }
 }

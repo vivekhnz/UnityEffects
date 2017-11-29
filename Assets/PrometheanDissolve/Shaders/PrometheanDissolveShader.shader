@@ -71,12 +71,12 @@
         {
             "Queue"="Transparent"
             "IgnoreProjector"="True"
-            "ForceNoShadowCasting"="True"
         }
+        LOD 200
 
         Cull Front
         CGPROGRAM
-        #pragma surface surf Lambert decal:blend
+        #pragma surface surf Lambert addshadow
         
         void surf (Input IN, inout SurfaceOutput o)
         {
@@ -87,7 +87,7 @@
 
         Cull Back
         CGPROGRAM
-        #pragma surface surf Lambert decal:blend
+        #pragma surface surf Lambert addshadow
         
         void surf (Input IN, inout SurfaceOutput o)
         {
