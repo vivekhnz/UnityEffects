@@ -38,8 +38,16 @@ public class TakenPuddleEffect : MonoBehaviour
             triangles.Add((i * 2) + 2);
             triangles.Add((i * 2) + 1);
 
-            barycentrics.Add(Vector3.up);
-            barycentrics.Add(Vector3.forward);
+            if (i % 2 == 0)
+            {
+                barycentrics.Add(Vector3.up);
+                barycentrics.Add(Vector3.forward);
+            }
+            else
+            {
+                barycentrics.Add(Vector3.forward);
+                barycentrics.Add(Vector3.up);
+            }
         }
 
         mesh.SetVertices(vertices);
