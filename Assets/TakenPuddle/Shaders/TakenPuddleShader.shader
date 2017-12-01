@@ -2,7 +2,11 @@
 {
 	Properties
 	{
-		_Color ("Color", Color) = (0.0, 0.0, 0.0, 1)
+		_InnerColor ("Inner color", Color) = (0.0, 0.0, 0.0, 1)
+		_OuterColor ("Outer color", Color) = (1.0, 1.0, 1.0, 1)
+
+		_FringeTexture ("Fringe texture", 2D) = "white" {}
+		_FringeRadius ("Fringe radius", Float) = 0.1
 	}
 
     SubShader
@@ -13,34 +17,45 @@
             "ForceNoShadowCasting"="True"
         }
 
-        CGPROGRAM
-        #pragma surface surf Lambert vertex:vert
-
-        float4 _Color;
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
             
-        struct Input
-        {
-            float3 position : POSITION;
-            float3 barycentric;
-        };
+            #include "UnityCG.cginc"
 
-        void vert(inout appdata_full i, out Input o)
-        {
-            UNITY_INITIALIZE_OUTPUT(Input, o);
-            float4 pos = mul(unity_ObjectToWorld, i.vertex);
+            struct appdata
+            {
+                float4 vertex : POSITION;
+                float4 barycentric : TANGENT;
+            };
+
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;
+                float3 barycentric : TANGENT;
+            };
+
+            float4 _InnerColor;
+            float4 _OuterColor;
+
+            sampler2D _FringeTexture;
+            float _FringeRadius;
             
-            o.barycentric = i.tangent.xyz;
-
-            o.position = mul(unity_WorldToObject, pos);
+            v2f vert(appdata v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.barycentric = v.barycentric;
+                return o;
+            }
+            
+            float4 frag(v2f i) : SV_Target
+            {
+                return tex2D(_FringeTexture, float2(i.barycentric.x / _FringeRadius, 0));
+            }
+            ENDCG
         }
-        
-        void surf (Input IN, inout SurfaceOutput o)
-        {
-            o.Albedo = IN.barycentric;
-            o.Alpha = 1;
-        }
-        
-        ENDCG
     }
-    Fallback "Diffuse"
 }
