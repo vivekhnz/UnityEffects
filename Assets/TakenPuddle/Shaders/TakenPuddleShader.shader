@@ -13,7 +13,6 @@
             "ForceNoShadowCasting"="True"
         }
 
-        Cull Off
         CGPROGRAM
         #pragma surface surf Lambert vertex:vert
 
@@ -21,22 +20,23 @@
             
         struct Input
         {
-            float4 color : COLOR;
+            float3 position : POSITION;
+            float3 barycentric;
         };
 
-        void vert(inout appdata_full v)
+        void vert(inout appdata_full i, out Input o)
         {
-            float3 origin = mul(unity_WorldToObject, float4(0, 0, 0, 1));
-            float3 up = mul(unity_ObjectToWorld, float4(0, 1, 0, 1));
+            UNITY_INITIALIZE_OUTPUT(Input, o);
+            float4 pos = mul(unity_ObjectToWorld, i.vertex);
+            
+            o.barycentric = i.tangent.xyz;
 
-            // v.vertex.xz += dir.xz * sin(_Time.y) * 0.1;
-            // v.vertex.xyz += up * lerp(1, 1.5, sin(_Time.y));
-            v.color = float4(v.vertex.x, v.vertex.y, v.vertex.z, 1);
+            o.position = mul(unity_WorldToObject, pos);
         }
         
         void surf (Input IN, inout SurfaceOutput o)
         {
-            o.Albedo = IN.color;
+            o.Albedo = IN.barycentric;
             o.Alpha = 1;
         }
         
