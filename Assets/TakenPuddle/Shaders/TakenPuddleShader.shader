@@ -8,6 +8,9 @@
 		_TimeScale ("Time scale", Float) = 0.1
 		_NoiseAmplitude ("Noise amplitude", Float) = 2
 		_NoiseWavelength ("Noise wavelength", Float) = 0.2
+        
+		_StarsTexture ("Stars texture", 2D) = "black" {}
+		_StarsTextureScale ("Stars texture scale", Float) = 5
 	}
 
     SubShader
@@ -66,7 +69,6 @@
 
             struct v2f
             {
-                float4 vertex : SV_POSITION;
                 float3 pos : POSITION1;
                 float3 barycentric : TANGENT;
             };
@@ -77,17 +79,20 @@
             float _TimeScale;
 		    float _NoiseAmplitude;
 		    float _NoiseWavelength;
+
+            sampler2D _StarsTexture;
+            float _StarsTextureScale;
             
-            v2f vert(appdata v)
+            v2f vert(appdata v, out float4 vertex : SV_POSITION)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                vertex = UnityObjectToClipPos(v.vertex);
                 o.pos = v.vertex.xyz;
                 o.barycentric = v.barycentric;
                 return o;
             }
             
-            float4 frag(v2f i) : SV_Target
+            float4 frag(v2f i, UNITY_VPOS_TYPE screenPos : VPOS) : SV_Target
             {
                 // adapted from https://www.redblobgames.com/x/1730-terrain-shader-experiments/noisy-hex-rendering.html
 
@@ -101,9 +106,16 @@
                 float max_gb = max(noisy.g, noisy.b);
                 if (noisy.r > max_gb)
                 {
+                    // calculate fringe colour
                     float diff = noisy.r - max_gb;
                     float fringe = diff * _FringeMultiplier;
-                    return float4(tex2D(_FringeTexture, float2(fringe, 0)).rgb, 1);
+                    float4 base = float4(tex2D(_FringeTexture, float2(fringe, 0)).rgb, 1);
+                    
+                    // sample stars texture
+                    screenPos.xy /= max(_ScreenParams.x, _ScreenParams.y) / _StarsTextureScale;
+                    float2 texcoord = float2(frac(screenPos.x), frac(screenPos.y));
+                    base.rgb += tex2D(_StarsTexture, texcoord).rgb * fringe * 0.5;
+                    return base;
                 }
                 else
                 {
