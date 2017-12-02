@@ -78,7 +78,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _MaxDistortion: 0.5
     - _Metallic: 0
+    - _MinDistortion: 0.4
     - _Mode: 0
     - _NoiseAmplitude: 1
     - _NoiseWavelength: 0.25

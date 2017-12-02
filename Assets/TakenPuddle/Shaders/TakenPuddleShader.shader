@@ -11,6 +11,8 @@
         
 		_StarsTexture ("Stars texture", 2D) = "black" {}
 		_StarsTextureScale ("Stars texture scale", Float) = 5
+		_MinDistortion ("Minimum stars distortion amplitude", Float) = 0.4
+		_MaxDistortion ("Maximum stars distortion amplitude", Float) = 0.5
 	}
 
     SubShader
@@ -82,6 +84,8 @@
 
             sampler2D _StarsTexture;
             float _StarsTextureScale;
+            float _MinDistortion;
+            float _MaxDistortion;
             
             v2f vert(appdata v, out float4 vertex : SV_POSITION)
             {
@@ -111,9 +115,24 @@
                     float fringe = diff * _FringeMultiplier;
                     float4 base = float4(tex2D(_FringeTexture, float2(fringe, 0)).rgb, 1);
                     
-                    // sample stars texture
-                    screenPos.xy /= max(_ScreenParams.x, _ScreenParams.y) / _StarsTextureScale;
+                    // sample stars texture using screen space position
+                    float screenSize = max(_ScreenParams.x, _ScreenParams.y);
+                    screenPos.xy /= screenSize / _StarsTextureScale;
+                    
+                    // distort position of stars texture coordinate based on world position
+                    float2 distortion = normalize(i.pos.xy);
+
+                    // distort less towards the center
+                    distortion *= (1 - i.barycentric.x);
+
+                    // fluctuate distortion over time
+                    distortion *= lerp(_MinDistortion, _MaxDistortion, sin(_Time.y * 0.5) + 1);
+
+                    // repeat texture coordinates
+                    screenPos.xy += distortion;
                     float2 texcoord = float2(frac(screenPos.x), frac(screenPos.y));
+
+                    // blend stars and fringe
                     base.rgb += tex2D(_StarsTexture, texcoord).rgb * fringe * 0.5;
                     return base;
                 }
