@@ -5,17 +5,17 @@ using UnityEngine;
 public class BloomEffect : MonoBehaviour
 {
     public string GlowLayerName = "Glow";
-    public Shader BlurShader;
-    public Shader CompositeShader;
     [Range(1, 8)]
     public int DownresFactor = 1;
 
     private Camera attachedCamera;
-    private Camera tempCam;
-    private int mask;
+    private Camera depthCam;
+    private Camera blurCam;
+    private int glowOnlyLayerMask;
 
-    private Material compositeMaterial;
+    private RenderTexture depthRT;
     private RenderTexture blurRT;
+    private Material compositeMaterial;
 
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
@@ -25,22 +25,29 @@ public class BloomEffect : MonoBehaviour
     {
         attachedCamera = GetComponent<Camera>();
 
-        // create render texture to store blurred texture in
+        // create render texture to store depth and blurred textures in
+        depthRT = new RenderTexture(Screen.width, Screen.height, 0, RenderTextureFormat.ARGBFloat);
         blurRT = new RenderTexture(Screen.width >> DownresFactor,
             Screen.height >> DownresFactor, 0);
+        glowOnlyLayerMask = 1 << LayerMask.NameToLayer(GlowLayerName);
 
-        // create shader material to composite the final image
-        compositeMaterial = new Material(CompositeShader);
-        compositeMaterial.SetTexture("_BlurredTex", blurRT);
+        // add a temporary camera that only renders the glowing objects
+        // the depth is stored in the alpha channel
+        depthCam = new GameObject().AddComponent<Camera>();
+        depthCam.name = "Depth Camera (Bloom)";
 
         // add a temporary camera to render the blurred scene
-        tempCam = new GameObject().AddComponent<Camera>();
-        mask = 1 << LayerMask.NameToLayer(GlowLayerName);
-
-        // set up the blur effect
-        var blur = tempCam.gameObject.AddComponent<BlurEffect>();
-        blur.BlurShader = BlurShader;
+        // the blur effect also masks glowing objects based on depth
+        blurCam = new GameObject().AddComponent<Camera>();
+        blurCam.name = "Blur Camera (Bloom)";
+        var blur = blurCam.gameObject.AddComponent<BlurEffect>();
         blur.BlurSize = new Vector2(blurRT.texelSize.x * 1.5f, blurRT.texelSize.y * 1.5f);
+        blur.DepthTexture = depthRT;
+
+        // create shader material to composite the final image
+        var compositeShader = Shader.Find("Custom/Bloom/Composite");
+        compositeMaterial = new Material(compositeShader);
+        compositeMaterial.SetTexture("_BlurredTex", blurRT);
     }
 
     /// <summary>
@@ -50,12 +57,15 @@ public class BloomEffect : MonoBehaviour
     /// <param name="dest">The destination RenderTexture.</param>
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
-        // ensure temporary camera is synchronized with main camera
-        tempCam.CopyFrom(attachedCamera);
-        tempCam.clearFlags = CameraClearFlags.Color;
-        tempCam.backgroundColor = Color.black;
-        tempCam.cullingMask = mask;
-        tempCam.targetTexture = blurRT;
+        // ensure temporary cameras are synchronized with main camera
+        depthCam.CopyFrom(attachedCamera);
+        depthCam.backgroundColor = Color.black;
+        depthCam.cullingMask = glowOnlyLayerMask;
+        depthCam.targetTexture = depthRT;
+
+        blurCam.CopyFrom(attachedCamera);
+        blurCam.backgroundColor = Color.black;
+        blurCam.targetTexture = blurRT;
 
         // composite final image
         Graphics.Blit(src, dest, compositeMaterial);

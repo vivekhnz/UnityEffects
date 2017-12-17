@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class BlurEffect : MonoBehaviour
 {
-    public Shader BlurShader;
     [Range(1, 64)]
     public int Iterations = 4;
     public Vector2 BlurSize;
+    public Texture DepthTexture;
 
     private Material blurMaterial;
 
@@ -17,8 +17,10 @@ public class BlurEffect : MonoBehaviour
     /// </summary>
     void Start()
     {
-        blurMaterial = new Material(BlurShader);
+        var shader = Shader.Find("Custom/Bloom/Blur");
+        blurMaterial = new Material(shader);
         blurMaterial.SetVector("_BlurSize", BlurSize);
+        blurMaterial.SetTexture("_DepthTex", DepthTexture);
     }
 
     /// <summary>
@@ -28,16 +30,21 @@ public class BlurEffect : MonoBehaviour
     /// <param name="dest">The destination RenderTexture.</param>
     void OnRenderImage(RenderTexture src, RenderTexture dest)
     {
+        // apply depth-based mask
+        var masked = RenderTexture.GetTemporary(src.width, src.height);
+        Graphics.Blit(src, masked, blurMaterial, 0);
+
         // apply blur
         for (int i = 0; i < Iterations; i++)
         {
-            var rt = RenderTexture.GetTemporary(src.width, src.height);
-            Graphics.Blit(src, rt, blurMaterial, 0);
-            Graphics.Blit(rt, src, blurMaterial, 1);
+            var rt = RenderTexture.GetTemporary(masked.width, masked.height);
+            Graphics.Blit(masked, rt, blurMaterial, 1);
+            Graphics.Blit(rt, masked, blurMaterial, 2);
             RenderTexture.ReleaseTemporary(rt);
         }
 
         // render resultant image
-        Graphics.Blit(src, dest);
+        Graphics.Blit(masked, dest);
+        RenderTexture.ReleaseTemporary(masked);
     }
 }

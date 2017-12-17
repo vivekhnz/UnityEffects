@@ -8,7 +8,9 @@ Shader "Custom/Bloom/Blur"
 	}
 	SubShader
 	{
-		Cull Off ZWrite Off ZTest Always
+		Cull Off
+		ZWrite On
+		ZTest Always
 
         CGINCLUDE
 
@@ -26,6 +28,7 @@ Shader "Custom/Bloom/Blur"
         {
             float4 vertex : SV_POSITION;
             float2 uv : TEXCOORD0;
+			float4 screenPos : TEXCOORD1;
         };
 
         v2f vert (appdata v)
@@ -33,13 +36,32 @@ Shader "Custom/Bloom/Blur"
             v2f o;
             o.vertex = UnityObjectToClipPos(v.vertex);
             o.uv = v.uv;
+			o.screenPos = ComputeScreenPos(o.vertex);
             return o;
         }
         
         sampler2D _MainTex;
+		sampler2D _DepthTex;
+		sampler2D _CameraDepthTexture;
+
         float2 _BlurSize;
 
         ENDCG
+
+		// Mask
+		Pass
+        {
+            CGPROGRAM
+            float4 frag(v2f i) : COLOR 
+            {
+                float camDepth = Linear01Depth(tex2Dproj(_CameraDepthTexture,
+                    UNITY_PROJ_COORD(i.screenPos)).r);
+                float objDepth = tex2D(_DepthTex, i.uv).a;
+                if (objDepth - camDepth > 0) return float4(0, 0, 0, 1);
+                return float4(tex2D(_DepthTex, i.uv).rgb, 1);
+            }
+            ENDCG
+        }
 
 		// Horizontal
 		Pass
@@ -75,4 +97,5 @@ Shader "Custom/Bloom/Blur"
 			ENDCG
 		}
     }
+    Fallback "Diffuse"
 }

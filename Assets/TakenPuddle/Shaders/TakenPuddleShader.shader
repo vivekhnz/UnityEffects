@@ -19,7 +19,6 @@
 	{
         Tags
         {
-            "RenderType" = "Opaque" 
             "ForceNoShadowCasting"="True"
         }
 
@@ -73,6 +72,7 @@
             {
                 float3 pos : POSITION1;
                 float3 barycentric : TANGENT;
+				float depth : DEPTH;
             };
             
             sampler2D _FringeTexture;
@@ -93,6 +93,7 @@
                 vertex = UnityObjectToClipPos(v.vertex);
                 o.pos = v.vertex.xyz;
                 o.barycentric = v.barycentric;
+				o.depth = -UnityObjectToViewPos(v.vertex).z * _ProjectionParams.w;
                 return o;
             }
             
@@ -113,7 +114,7 @@
                     // calculate fringe colour
                     float diff = noisy.r - max_gb;
                     float fringe = diff * _FringeMultiplier;
-                    float4 base = float4(tex2D(_FringeTexture, float2(fringe, 0)).rgb, 1);
+                    float4 base = float4(tex2D(_FringeTexture, float2(fringe, 0)).rgb, i.depth);
                     
                     // sample stars texture using screen space position
                     float screenSize = max(_ScreenParams.x, _ScreenParams.y);
@@ -140,9 +141,10 @@
                 {
                     clip(-1);
                 }
-                return float4(0, 0, 0, 1);
+                return float4(0, 0, 0, i.depth);
             }
             ENDCG
         }
     }
+    Fallback "Diffuse"
 }
