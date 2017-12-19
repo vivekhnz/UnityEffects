@@ -4,6 +4,7 @@
     {
         _MainTex ("Main Texture", 2D) = "black" {}
         _BlurredTex ("Blurred Texture", 2D) = "black" {}
+		_Intensity ("Intensity", Float) = 1
     }
     SubShader 
     {
@@ -19,6 +20,7 @@
  
             sampler2D _MainTex;
             sampler2D _BlurredTex;
+            float _Intensity;
              
             struct v2f 
             {
@@ -39,7 +41,7 @@
                 // additively blend scene and blurred textures
                 float4 scene = tex2D(_MainTex, i.uv);
                 float4 blurred = tex2D(_BlurredTex, i.uv);
-                return scene + blurred;
+                return scene + (blurred * _Intensity);
             }
              
             ENDCG
