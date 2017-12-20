@@ -32,33 +32,50 @@
 			#pragma multi_compile DUMMY PIXELSNAP_ON
 			#include "UnityCG.cginc"
 			
-			struct appdata_t
+			struct appdata_particles
 			{
-				float4 vertex   : POSITION;
-				float4 color    : COLOR;
-				float2 texcoord : TEXCOORD0;
+				float4 vertex    : POSITION;
+				float4 color     : COLOR;
+				float4 texcoord0 : TEXCOORD0;
 			};
 
 			struct v2f
 			{
 				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
-				half2 texcoord  : TEXCOORD0;
+				fixed3 color    : COLOR;
 			};
 			
 			fixed4 _Color;
+			float3 _Origin;
+			float _Radius;
 
-			v2f vert(appdata_t IN)
+			v2f vert(appdata_particles IN)
 			{
 				v2f OUT;
+
+				// calculate depth
+				float z = -UnityObjectToViewPos(IN.vertex).z * _ProjectionParams.w;
 				
-				OUT.vertex = UnityObjectToClipPos(IN.vertex);
-				OUT.texcoord = IN.texcoord;
+				// extract particle center position and per-particle random value
+				float3 center = IN.texcoord0.xyz;
+				float random = IN.texcoord0.w;
+
+				// randomly distribute particle within sphere
+				float progress = lerp(0.1, 1, pow(random, 0.75));
+				float3 offset = normalize(center - _Origin) * progress * _Radius;
+				
+				// scale particle size based on proximity
+				float3 relativeOffset = IN.vertex.xyz - center;
+				float scale = max(0.9 - (z * 10), 0) + 0.1;
+				scale = scale * max(1 - (z * lerp(3, 5, random)), 0);
+				float3 position = _Origin + offset + (relativeOffset * scale);
+
+				OUT.vertex = UnityObjectToClipPos(position);
 				OUT.color = IN.color * _Color;
 				#ifdef PIXELSNAP_ON
 				OUT.vertex = UnityPixelSnap (OUT.vertex);
 				#endif
-
+				
 				return OUT;
 			}
 
@@ -66,9 +83,7 @@
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				fixed4 c = tex2D(_MainTex, IN.texcoord) * IN.color;
-				c.a = 0;
-				return c;
+				return fixed4(IN.color.rgb, 0);
 			}
 
 			ENDCG
