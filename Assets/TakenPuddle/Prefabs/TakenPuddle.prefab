@@ -138,6 +138,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Sides: 6
+  MinBloomIntensity: 1
+  MaxBloomIntensity: 2
+  MinBloomIntensityRange: 5
+  MaxBloomIntensityRange: 3
 --- !u!198 &198868267497688280
 ParticleSystem:
   m_ObjectHideFlags: 1

@@ -9,10 +9,37 @@ public class TakenPuddleEffect : MonoBehaviour
     [Range(3, 128)]
     public int Sides = 6;
 
+    public float MinBloomIntensity = 1;
+    public float MaxBloomIntensity = 2;
+    public float MinBloomIntensityRange = 5;
+    public float MaxBloomIntensityRange = 3;
+
+    private BloomEffect bloom;
+
     void Start()
     {
         var filter = GetComponent<MeshFilter>();
         filter.mesh = CreateMesh();
+
+        bloom = Camera.main.GetComponent<BloomEffect>();
+    }
+
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void Update()
+    {
+        if (bloom != null)
+        {
+            // calculate bloom intensity based on distance to camera
+            float distance = Vector3.Distance(transform.position,
+                Camera.main.transform.position);
+            float rangeDiff = MaxBloomIntensityRange - MinBloomIntensityRange;
+            float intensity = ((distance - MaxBloomIntensityRange) / rangeDiff) + 1;
+            float clamped = Mathf.Clamp(intensity, 0, 1);
+            bloom.SetPerFrameIntensity(
+                Mathf.Lerp(MinBloomIntensity, MaxBloomIntensity, clamped));
+        }
     }
 
     private Mesh CreateMesh()

@@ -17,6 +17,8 @@ public class BloomEffect : MonoBehaviour
     private RenderTexture blurRT;
     private Material compositeMaterial;
 
+    private float intensity;
+
     /// <summary>
     /// Start is called on the frame when a script is enabled just before
     /// any of the Update methods is called the first time.
@@ -51,6 +53,17 @@ public class BloomEffect : MonoBehaviour
     }
 
     /// <summary>
+    /// LateUpdate is called every frame, if the Behaviour is enabled.
+    /// It is called after all Update functions have been called.
+    /// </summary>
+    void LateUpdate()
+    {
+        // update intensity in late update to ensure the maximum intensity value is retrieved
+        compositeMaterial.SetFloat("_Intensity", intensity);
+        intensity = 0;
+    }
+
+    /// <summary>
     /// OnRenderImage is called after all rendering is complete to render image.
     /// </summary>
     /// <param name="src">The source RenderTexture.</param>
@@ -69,5 +82,10 @@ public class BloomEffect : MonoBehaviour
 
         // composite final image
         Graphics.Blit(src, dest, compositeMaterial);
+    }
+
+    public void SetPerFrameIntensity(float intensity)
+    {
+        this.intensity = Mathf.Max(this.intensity, intensity);
     }
 }
