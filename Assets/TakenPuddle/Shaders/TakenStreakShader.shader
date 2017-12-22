@@ -5,6 +5,8 @@
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
+
+		_RippleTexture ("Ripple texture", 2D) = "black" {}
 	}
 
 	SubShader
@@ -43,11 +45,16 @@
 			{
 				float4 vertex   : SV_POSITION;
 				fixed3 color    : COLOR;
+				float  depth	: DEPTH;
 			};
+
+            sampler2D _RippleTexture;
 			
 			fixed4 _Color;
 			float3 _Origin;
 			float _Radius;
+
+			static const float PI = 3.14159265f;
 
 			v2f vert(appdata_particles IN)
 			{
@@ -62,7 +69,14 @@
 
 				// randomly distribute particle within sphere
 				float progress = lerp(0.1, 1, pow(random, 0.75));
-				float3 offset = normalize(center - _Origin) * progress * _Radius;
+
+				// adjust radius by ripple offset
+				float3 offsetDir = normalize(center - _Origin);
+				float xAngle = (atan2(offsetDir.z, offsetDir.x) / (2 * PI)) + 0.5;
+				float yAngle = (atan(offsetDir.z / offsetDir.y) / PI) + 0.5;
+				float ripple = tex2Dlod(_RippleTexture, float4(xAngle, yAngle, 0, 0)).r;
+				progress = progress * lerp(1, 0.9, ripple);
+				float3 offset = offsetDir * progress * _Radius;
 				
 				// scale particle size based on proximity
 				float3 relativeOffset = IN.vertex.xyz - center;
@@ -72,6 +86,7 @@
 
 				OUT.vertex = UnityObjectToClipPos(position);
 				OUT.color = IN.color * _Color;
+				OUT.depth = z;
 				#ifdef PIXELSNAP_ON
 				OUT.vertex = UnityPixelSnap (OUT.vertex);
 				#endif
@@ -83,7 +98,7 @@
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				return fixed4(IN.color.rgb, 0);
+				return fixed4(IN.color.rgb, IN.depth);
 			}
 
 			ENDCG
