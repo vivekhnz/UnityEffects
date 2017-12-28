@@ -114,7 +114,7 @@
 				float3 center = IN.texcoord0.xyz;
 				float random = IN.texcoord0.w;
 
-				// randomly distribute particle within sphere
+				// randomly distribute particle within emission shape
 				float progress = lerp(0.1, 1, pow(random, 0.75));
 				float3 offsetDir = normalize(center - _Origin);
 				float3 offset = offsetDir * progress * _Radius;
@@ -122,8 +122,6 @@
 				// sample noise from texture
 				float xAngle = (atan(offsetDir.x / offsetDir.y) / PI) + 0.5;
 				float yAngle = (atan(offsetDir.z / offsetDir.y) / PI) + 0.5;
-				xAngle = xAngle + (_Time.y * 0.003);
-				yAngle = yAngle + (_Time.y * 0.002);
 				float noise = tex2Dlod(_NoiseTex, float4(xAngle, yAngle, 0, 0)).r;
 				
 				// calculate ripple
@@ -149,8 +147,6 @@
 				
 				return OUT;
 			}
-
-			sampler2D _MainTex;
 
 			fixed4 frag(v2f IN) : SV_Target
 			{

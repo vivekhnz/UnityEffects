@@ -139,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Sides: 6
   MinBloomIntensity: 1
-  MaxBloomIntensity: 2
+  MaxBloomIntensity: 2.5
   MinBloomIntensityRange: 5
   MaxBloomIntensityRange: 3
 --- !u!198 &198868267497688280
@@ -292,7 +292,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 2
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.66176474, g: 0.72008115, b: 1, a: 1}
+      maxColor: {r: 0.75346017, g: 0.7934316, b: 0.9852941, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -354,8 +354,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.025
-      minScalar: 0.05
+      scalar: 0.01
+      minScalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -395,8 +395,8 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.1
-      minScalar: 0.15
+      scalar: 0.05
+      minScalar: 0.075
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -436,8 +436,8 @@ ParticleSystem:
     startSizeZ:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.025
-      minScalar: 0.05
+      scalar: 0.01
+      minScalar: 0.02
       maxCurve:
         serializedVersion: 2
         m_Curve:
