@@ -1,4 +1,4 @@
-﻿Shader "Custom/TakenPuddle"
+﻿Shader "Custom/TakenPuddle/Puddle"
 {
 	Properties
 	{
