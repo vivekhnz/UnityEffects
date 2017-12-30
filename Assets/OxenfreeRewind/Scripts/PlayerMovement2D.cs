@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
 public class PlayerMovement2D : MonoBehaviour
 {
     public float Speed = 0.1f;
@@ -27,7 +29,7 @@ public class PlayerMovement2D : MonoBehaviour
         // move based on input
         float movement = Input.GetAxis("Horizontal");
         float absMovement = Mathf.Abs(movement);
-        transform.Translate(movement * Speed, 0, 0);
+        transform.Translate(movement * Speed * Time.deltaTime, 0, 0);
 
         // update sprite
         animator.SetFloat("WalkSpeed", absMovement);
