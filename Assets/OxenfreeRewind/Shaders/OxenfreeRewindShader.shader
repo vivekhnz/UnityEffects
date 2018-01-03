@@ -10,6 +10,7 @@
 		_MaxJitterDisplacement ("Max jitter displacement", Float) = 0.02
 		_JitterDelay ("Jitter function time delay", Float) = 0.1
 		_BaseJitterRatio ("Constant to wave jitter ratio", Float) = 0.25
+		_TintIntensity ("Tint intensity", Float) = 0.05
 	}
 	SubShader
 	{
@@ -47,6 +48,7 @@
 			float _MaxJitterDisplacement;
 			float _JitterDelay;
 			float _BaseJitterRatio;
+			float _TintIntensity;
 
 			float _Intensity;
 
@@ -85,9 +87,10 @@
 			fixed4 frag (v2f i) : SV_Target
 			{
 				// derive effect intensity values
-				float iWaveDisplacement = max(0, min(2 * _Intensity, 1));
-				float iJitterDisplacement = max(0, min((4 * _Intensity) - 2, 1));
-				float iStatic = max(0, min((4 * _Intensity) - 3, 1));
+				float iWaveDisplacement = max(0, min(4 * _Intensity, 1));
+				float iJitterDisplacement = max(0, min((4 * _Intensity) - 1, 1));
+				float iStatic = max(0, min((4 * _Intensity) - 2, 1));
+				float iStaticOverlay = max(0, min((4 * _Intensity) - 3, 1));
 
 				// calculate displacement 'wave'
 				float t = rewind(i.uv.y);
@@ -108,7 +111,13 @@
 				
 				// blend between main texture and static noise
 				float3 pointNoise = tex2D(_NoiseTex, i.noiseUV);
-				float3 result = lerp(base, pointNoise, t * iStatic);
+				float3 blended = lerp(base, pointNoise, t * iStatic);
+
+				// apply a blue tint based on effect intensity
+				float3 tinted = lerp(blended, float3(0, 0, 1), _Intensity * _TintIntensity);
+
+				// blend with static overlay
+				float3 result = lerp(tinted, pointNoise, iStaticOverlay);
 				return fixed4(result.rgb, 1);
 			}
 			ENDCG
