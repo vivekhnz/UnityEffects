@@ -70,6 +70,7 @@ Material:
     - _JitterDelay: 0.1
     - _MaxDisplacement: 0.0075
     - _MaxJitterDisplacement: 0.02
+    - _MaxTintIntensity: 0.05
     - _MaxWaveDisplacement: 0.05
     - _Metallic: 0
     - _Mode: 0
@@ -79,6 +80,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _TintIntensity: 0
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:

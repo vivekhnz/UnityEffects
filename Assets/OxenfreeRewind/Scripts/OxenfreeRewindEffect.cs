@@ -6,7 +6,13 @@ using UnityEngine;
 public class OxenfreeRewindEffect : MonoBehaviour
 {
     public Material EffectMaterial;
-    public float Intensity = 0;
+    public float TintIntensity = 0;
+    public float WaveDisplacementIntensity = 0;
+    public float JitterDisplacementIntensity = 0;
+    public float StaticIntensity = 0;
+    public float StaticOverlayIntensity = 0;
+    public float WaveOffset = 0;
+    public float ScreenOffset = 0;
 
     private Animator animator;
     private TransitionManager transitions;
@@ -28,7 +34,13 @@ public class OxenfreeRewindEffect : MonoBehaviour
     /// </summary>
     void Update()
     {
-        EffectMaterial.SetFloat("_Intensity", Intensity);
+        EffectMaterial.SetFloat("_TintIntensity", TintIntensity);
+        EffectMaterial.SetFloat("_WaveDisplacementIntensity", WaveDisplacementIntensity);
+        EffectMaterial.SetFloat("_JitterDisplacementIntensity", JitterDisplacementIntensity);
+        EffectMaterial.SetFloat("_StaticIntensity", StaticIntensity);
+        EffectMaterial.SetFloat("_StaticOverlayIntensity", StaticOverlayIntensity);
+        EffectMaterial.SetFloat("_WaveOffset", WaveOffset);
+        EffectMaterial.SetFloat("_ScreenOffset", ScreenOffset);
     }
 
     /// <summary>

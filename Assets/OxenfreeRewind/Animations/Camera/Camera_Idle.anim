@@ -28,7 +28,103 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: Intensity
+    attribute: TintIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: WaveDisplacementIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: JitterDisplacementIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: StaticIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: StaticOverlayIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: WaveOffset
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: ScreenOffset
     path: 
     classID: 114
     script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
@@ -42,7 +138,49 @@ AnimationClip:
     genericBindings:
     - serializedVersion: 2
       path: 0
-      attribute: 1799567921
+      attribute: 66517951
+      script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 0
+      attribute: 4288189850
+      script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 0
+      attribute: 3776801208
+      script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 0
+      attribute: 3554554355
+      script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 0
+      attribute: 1096740681
+      script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 0
+      attribute: 2945447344
+      script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 0
+      attribute: 2980632774
       script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
       typeID: 114
       customType: 0
@@ -81,7 +219,103 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: Intensity
+    attribute: TintIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: WaveDisplacementIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: JitterDisplacementIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: StaticIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: StaticOverlayIntensity
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: WaveOffset
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: ScreenOffset
     path: 
     classID: 114
     script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
