@@ -6,7 +6,7 @@ using UnityEngine;
 public class OxenfreeRewindEffect : MonoBehaviour
 {
     public Material EffectMaterial;
-    public float StaticIntensity = 0;
+    public float Intensity = 0;
 
     private Animator animator;
     private TransitionManager transitions;
@@ -28,7 +28,7 @@ public class OxenfreeRewindEffect : MonoBehaviour
     /// </summary>
     void Update()
     {
-        EffectMaterial.SetFloat("_StaticIntensity", StaticIntensity);
+        EffectMaterial.SetFloat("_Intensity", Intensity);
     }
 
     /// <summary>

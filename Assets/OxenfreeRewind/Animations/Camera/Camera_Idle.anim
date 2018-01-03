@@ -28,7 +28,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: StaticIntensity
+    attribute: Intensity
     path: 
     classID: 114
     script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
@@ -42,7 +42,7 @@ AnimationClip:
     genericBindings:
     - serializedVersion: 2
       path: 0
-      attribute: 3554554355
+      attribute: 1799567921
       script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
       typeID: 114
       customType: 0
@@ -81,7 +81,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: StaticIntensity
+    attribute: Intensity
     path: 
     classID: 114
     script: {fileID: 11500000, guid: 8e037caaa2d1c074aa1c97f1dbc986d3, type: 3}
