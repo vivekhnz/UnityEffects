@@ -106,6 +106,10 @@
 				float displacement = t * _MaxWaveDisplacement * _WaveDisplacementIntensity;
 				displacement += jitter * _MaxJitterDisplacement * _JitterDisplacementIntensity;
 				float2 uv = float2(i.uv.x + displacement, (i.uv.y + _ScreenOffset) % 1);
+				while (uv.y < 0)
+				{
+					uv.y += 1;
+				}
 				float3 base = tex2D(_MainTex, uv).rgb;
 				
 				// blend between main texture and static noise
