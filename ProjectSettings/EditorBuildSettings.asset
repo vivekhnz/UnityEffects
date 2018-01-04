@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/OxenfreeRewind/OxenfreeRewind_1.unity
+    guid: ecf928170d7879d4ab7fa26a2b1269b4
+  - enabled: 1
+    path: Assets/OxenfreeRewind/OxenfreeRewind_2.unity
+    guid: f14dce4c6c027ac4d8c0beae52ab19cb
