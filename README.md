@@ -20,3 +20,11 @@ Promethean Knight model and animation created by [SaahilNZ](https://github.com/s
 This is a recreation of the Taken 'puddles' found near Taken enemies in Destiny.
 
 ![Taken Puddle effect](previews/TakenPuddle.gif)
+
+## `OxenfreeRewind_1.unity`
+
+This is a recreation of the rewind transition animation preceding Oxenfree's 'time loop' sequences.
+
+![Oxenfree Rewind effect](previews/OxenfreeRewind.gif)
+
+Character model and walk animation created by [Clint Bellanger](http://www.patreon.com/clintbellanger). Retrieved from [OpenGameArt.org](https://opengameart.org/content/platformer-animations).
