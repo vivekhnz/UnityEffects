@@ -701,6 +701,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WireframeBackgroundColor: {r: 0.06098615, g: 0.3023576, b: 0.3455882, a: 1}
+  WireframeLineColor: {r: 0.051092118, g: 0.869271, b: 0.99264705, a: 1}
 --- !u!1 &907324724
 GameObject:
   m_ObjectHideFlags: 0

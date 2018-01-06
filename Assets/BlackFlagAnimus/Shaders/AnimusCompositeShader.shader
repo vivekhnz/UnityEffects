@@ -1,4 +1,4 @@
-﻿Shader "Custom/BlackFlagAnimus"
+﻿Shader "Custom/BlackFlagAnimus/Composite"
 {
     Properties
     {
@@ -20,8 +20,10 @@
             #include "UnityCG.cginc"
  
             sampler2D _MainTex;
+            sampler2D _WireframeTex;
             sampler2D _CameraDepthTexture;
             
+            float3 _BackgroundColor;
             float _ScanTimeMultiplier;
             float _ScanFringeWidth;
              
@@ -52,11 +54,11 @@
                 // hide objects that have not been scanned
                 if (depth > end)
                 {
-                    return float4(0, 0, 0, 1);
+                    return float4(_BackgroundColor, 1);
                 }
 
                 // render scan fringe
-                float3 output = tex2D(_MainTex, i.uv);
+                float3 output = tex2D(_WireframeTex, i.uv);
                 if (depth > start && depth < end && depth < 1)
                 {
                     float progress = (depth - start) / (end - depth);
