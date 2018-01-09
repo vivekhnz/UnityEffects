@@ -53,6 +53,7 @@
                 float start = end - _ScanFringeWidth;
 
                 float3 output = tex2D(_MainTex, i.uv);
+                output = lerp(_BackgroundColor, output, pow(_ScanProgress, 2.5));
                 if (depth > end)
                 {
                     // hide objects that have not been scanned

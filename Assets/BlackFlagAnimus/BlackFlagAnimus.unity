@@ -685,7 +685,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 832329380}
   m_LocalRotation: {x: 0.06104851, y: 0, z: 0, w: 0.99813485}
-  m_LocalPosition: {x: 273, y: 30, z: 75}
+  m_LocalPosition: {x: 296.36, y: 30, z: 75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -707,6 +707,7 @@ MonoBehaviour:
   WireframeScanProgress: 0
   SceneScanProgress: 0
   ScanLineOpacity: 0
+  FlashBrightness: 0
   RenderSkybox: 0
 --- !u!95 &832329386
 Animator:
