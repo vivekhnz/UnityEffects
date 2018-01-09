@@ -7,6 +7,16 @@ public class BlackFlagAnimusEffect : MonoBehaviour
     public Color WireframeBackgroundColor = Color.black;
     public Color WireframeLineColor = Color.white;
 
+    [Range(0, 1)]
+    public float WireframeScanProgress = 0;
+    [Range(0, 1)]
+    public float SceneScanProgress = 0;
+    [Range(0, 1)]
+    public float ScanLineOpacity = 0.1f;
+    [Range(0, 1)]
+    public float FlashBrightness = 0;
+    public bool RenderSkybox = false;
+
     private Camera attachedCamera;
     private Camera wireframeCam;
 
@@ -31,14 +41,30 @@ public class BlackFlagAnimusEffect : MonoBehaviour
 
         // load and configure wireframe shader
         wireframeShader = Shader.Find("Custom/BlackFlagAnimus/Wireframe");
-        Shader.SetGlobalColor("_WireframeBackgroundColor", WireframeBackgroundColor);
         Shader.SetGlobalColor("_WireframeLineColor", WireframeLineColor);
+        Shader.SetGlobalFloat("_ScanFringeWidth", 0.1f);
 
         // create shader material
         var compositeShader = Shader.Find("Custom/BlackFlagAnimus/Composite");
         compositeMat = new Material(compositeShader);
         compositeMat.SetTexture("_WireframeTex", wireframeRT);
         compositeMat.SetColor("_BackgroundColor", WireframeBackgroundColor);
+    }
+
+    /// <summary>
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void Update()
+    {
+        Shader.SetGlobalFloat("_WireframeScanProgress", WireframeScanProgress);
+        Shader.SetGlobalColor("_WireframeBackgroundColor", WireframeBackgroundColor);
+
+        compositeMat.SetFloat("_ScanProgress", SceneScanProgress);
+        compositeMat.SetFloat("_ScanLineOpacity", ScanLineOpacity);
+        compositeMat.SetFloat("_FlashBrightness", FlashBrightness);
+
+        attachedCamera.clearFlags = RenderSkybox ? CameraClearFlags.Skybox :
+            CameraClearFlags.SolidColor;
     }
 
     /// <summary>

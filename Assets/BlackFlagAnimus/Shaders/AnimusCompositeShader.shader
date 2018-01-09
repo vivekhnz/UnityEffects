@@ -3,9 +3,6 @@
     Properties
     {
         _MainTex ("Main Texture", 2D) = "black" {}
-        
-		_ScanTimeMultiplier ("Scan time multiplier", Float) = 0.075
-		_ScanFringeWidth ("Scan fringe width", Float) = 0.02
     }
     SubShader 
     {
@@ -18,14 +15,18 @@
             #pragma vertex vert
             #pragma fragment frag
             #include "UnityCG.cginc"
+
+			static const float PI = 3.14159265f;
  
             sampler2D _MainTex;
             sampler2D _WireframeTex;
             sampler2D _CameraDepthTexture;
             
             float3 _BackgroundColor;
-            float _ScanTimeMultiplier;
+			float _ScanProgress;
             float _ScanFringeWidth;
+            float _ScanLineOpacity;
+            float _FlashBrightness;
              
             struct v2f 
             {
@@ -48,22 +49,29 @@
 				float depth = Linear01Depth(rawDepth);
                 
                 // calculate scan fringe
-                float start = (_Time.y * _ScanTimeMultiplier) % 1;
-                float end = start + _ScanFringeWidth;
+                float end = _ScanProgress;
+                float start = end - _ScanFringeWidth;
 
-                // hide objects that have not been scanned
+                float3 output = tex2D(_MainTex, i.uv);
                 if (depth > end)
                 {
-                    return float4(_BackgroundColor, 1);
+                    // hide objects that have not been scanned
+                    output = tex2D(_WireframeTex, i.uv);
                 }
-
-                // render scan fringe
-                float3 output = tex2D(_WireframeTex, i.uv);
-                if (depth > start && depth < end && depth < 1)
+                else if (depth > start && depth < 1)
                 {
-                    float progress = (depth - start) / (end - depth);
+                    // render scan fringe
+                    float progress = (depth - start) / (end - start);
                     output = lerp(output, float3(1, 1, 1), progress);
                 }
+
+                // render scan lines
+                float y = i.uv.y + (_Time.y * 0.1);
+                float scanLineVisibility = (sin(300 * PI * y) + 1) / 2;
+                output = lerp(output, float3(1, 1, 1), scanLineVisibility * _ScanLineOpacity);
+
+                // apply brightness flash
+                output = lerp(output, float3(1, 1, 1), _FlashBrightness);
 
                 // show objects that have been scanned
                 return float4(output, 1);

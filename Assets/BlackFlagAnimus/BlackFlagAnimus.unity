@@ -621,6 +621,7 @@ GameObject:
   - component: {fileID: 832329382}
   - component: {fileID: 832329381}
   - component: {fileID: 832329385}
+  - component: {fileID: 832329386}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -650,7 +651,7 @@ Camera:
   m_GameObject: {fileID: 832329380}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -684,7 +685,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 832329380}
   m_LocalRotation: {x: 0.06104851, y: 0, z: 0, w: 0.99813485}
-  m_LocalPosition: {x: 282.98, y: 40, z: 63}
+  m_LocalPosition: {x: 273, y: 30, z: 75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -703,6 +704,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WireframeBackgroundColor: {r: 0.06098615, g: 0.3023576, b: 0.3455882, a: 1}
   WireframeLineColor: {r: 0.051092118, g: 0.869271, b: 0.99264705, a: 1}
+  WireframeScanProgress: 0
+  SceneScanProgress: 0
+  ScanLineOpacity: 0
+  RenderSkybox: 0
+--- !u!95 &832329386
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 832329380}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3cd14dd5fb35d814f843d78e2508b7c6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &907324724
 GameObject:
   m_ObjectHideFlags: 0

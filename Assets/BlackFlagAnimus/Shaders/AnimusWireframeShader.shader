@@ -25,6 +25,8 @@
 
 			float3 _WireframeBackgroundColor;
 			float3 _WireframeLineColor;
+			float _WireframeScanProgress;
+            float _ScanFringeWidth;
 
 			struct appdata
 			{
@@ -101,14 +103,35 @@
 				float dist = min(min(i.barycentric.x, i.barycentric.y), i.barycentric.z);
 				float depth = i.barycentric.w;
 
-				// calculate line visibility
-				float visibility = pow(1 - depth, 2);
-				float t = (1 - depth) * 0.0004;
-				if (dist > t)
-				{
-					visibility *= pow(t / dist, lerp(0.75, 2, depth));
-				}
-				return fixed4(lerp(_WireframeBackgroundColor, _WireframeLineColor, visibility), 1);
+				// calculate scan fringe
+                float end = _WireframeScanProgress;
+                float start = end - _ScanFringeWidth;
+
+				// hide objects that have not been scanned
+                if (depth > end)
+                {
+                    return fixed4(_WireframeBackgroundColor, 1);
+                }
+
+				// render scan fringe
+                if (depth > start && depth < end && depth < 1)
+                {
+					// calculate line visibility
+					float visibility = pow(1 - depth, 2);
+					float threshold = (1 - depth) * 0.0004;
+					if (dist > threshold)
+					{
+						visibility *= pow(threshold / dist, lerp(0.75, 2, depth));
+					}
+					float3 color = lerp(_WireframeBackgroundColor, _WireframeLineColor, visibility);
+
+					// calculate fringe visibility
+                    float progress = (depth - start) / (end - start);
+					float t = 16 * pow(progress - 0.5, 4);
+                    return fixed4(lerp(color, _WireframeBackgroundColor, t), 1);
+                }
+
+				return fixed4(_WireframeBackgroundColor, 1);
 			}
 			ENDCG
 		}
