@@ -114,7 +114,7 @@
                 }
 
 				// render scan fringe
-                if (depth > start && depth < end && depth < 1)
+                if (depth > start && depth < end)
                 {
 					// calculate line visibility
 					float visibility = pow(1 - depth, 2);

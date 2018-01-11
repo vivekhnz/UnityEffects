@@ -14,8 +14,12 @@ public class BlackFlagAnimusEffect : MonoBehaviour
     [Range(0, 1)]
     public float ScanLineOpacity = 0.1f;
     [Range(0, 1)]
-    public float FlashBrightness = 0;
+    public float WipeAlpha = 0;
+    [Range(0, 1)]
+    public float FogAlpha = 0;
     public bool RenderSkybox = false;
+    public bool IsEffectEnabled = false;
+    public bool IsTransitioningOut = false;
 
     private Camera attachedCamera;
     private Camera wireframeCam;
@@ -61,7 +65,9 @@ public class BlackFlagAnimusEffect : MonoBehaviour
 
         compositeMat.SetFloat("_ScanProgress", SceneScanProgress);
         compositeMat.SetFloat("_ScanLineOpacity", ScanLineOpacity);
-        compositeMat.SetFloat("_FlashBrightness", FlashBrightness);
+        compositeMat.SetFloat("_WipeAlpha", WipeAlpha);
+        compositeMat.SetFloat("_FogAlpha", FogAlpha);
+        compositeMat.SetColor("_FogColor", WireframeLineColor);
 
         attachedCamera.clearFlags = RenderSkybox ? CameraClearFlags.Skybox :
             CameraClearFlags.SolidColor;
@@ -79,6 +85,13 @@ public class BlackFlagAnimusEffect : MonoBehaviour
         wireframeCam.targetTexture = wireframeRT;
         wireframeCam.SetReplacementShader(wireframeShader, string.Empty);
 
-        Graphics.Blit(src, dest, compositeMat);
+        if (IsEffectEnabled)
+        {
+            Graphics.Blit(src, dest, compositeMat, IsTransitioningOut ? 1 : 0);
+        }
+        else
+        {
+            Graphics.Blit(src, dest);
+        }
     }
 }

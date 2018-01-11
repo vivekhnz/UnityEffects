@@ -707,8 +707,11 @@ MonoBehaviour:
   WireframeScanProgress: 0
   SceneScanProgress: 0
   ScanLineOpacity: 0
-  FlashBrightness: 0
+  WipeAlpha: 0
+  FogAlpha: 0
   RenderSkybox: 0
+  IsEffectEnabled: 0
+  IsTransitioningOut: 0
 --- !u!95 &832329386
 Animator:
   serializedVersion: 3
