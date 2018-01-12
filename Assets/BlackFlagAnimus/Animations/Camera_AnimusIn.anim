@@ -316,6 +316,56 @@ AnimationClip:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+      - serializedVersion: 2
+        time: 5.016667
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: IsEffectEnabled
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      - serializedVersion: 2
+        time: 0.5
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: BlackScreenAlpha
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      - serializedVersion: 2
         time: 1.25
         value: 0
         inSlope: -0
@@ -348,29 +398,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: WipeAlpha
-    path: 
-    classID: 114
-    script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 1
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-      - serializedVersion: 2
-        time: 5.016667
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: IsEffectEnabled
+    attribute: FlashBrightness
     path: 
     classID: 114
     script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
@@ -454,14 +482,21 @@ AnimationClip:
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 0
-      attribute: 1556884528
+      attribute: 1525349913
       script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
       typeID: 114
       customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 0
-      attribute: 1525349913
+      attribute: 405064131
+      script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
+      typeID: 114
+      customType: 0
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 0
+      attribute: 2264737931
       script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
       typeID: 114
       customType: 0
@@ -889,6 +924,56 @@ AnimationClip:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+      - serializedVersion: 2
+        time: 5.016667
+        value: 0
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: IsEffectEnabled
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      - serializedVersion: 2
+        time: 0.5
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: BlackScreenAlpha
+    path: 
+    classID: 114
+    script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+      - serializedVersion: 2
         time: 1.25
         value: 0
         inSlope: -0
@@ -921,29 +1006,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: WipeAlpha
-    path: 
-    classID: 114
-    script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 1
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-      - serializedVersion: 2
-        time: 5.016667
-        value: 0
-        inSlope: Infinity
-        outSlope: Infinity
-        tangentMode: 103
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: IsEffectEnabled
+    attribute: FlashBrightness
     path: 
     classID: 114
     script: {fileID: 11500000, guid: 7e8891a48a737ad41828d90172ff6139, type: 3}

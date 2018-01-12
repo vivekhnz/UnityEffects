@@ -26,7 +26,8 @@
         float _ScanProgress;
         float _ScanFringeWidth;
         float _ScanLineOpacity;
-        float _WipeAlpha;
+        float _FlashBrightness;
+        float _BlackScreenAlpha;
             
         struct v2f 
         {
@@ -78,8 +79,9 @@
                 float scanLineVisibility = (sin(300 * PI * y) + 1) / 2;
                 output = lerp(output, float3(1, 1, 1), scanLineVisibility * _ScanLineOpacity);
 
-                // apply solid color wipe
-                output = lerp(output, float3(1, 1, 1), _WipeAlpha);
+                // apply solid color overlays
+                output = lerp(output, float3(1, 1, 1), _FlashBrightness);
+                output = lerp(output, float3(0, 0, 0), _BlackScreenAlpha);
 
                 // show objects that have been scanned
                 return float4(output, 1);
@@ -132,8 +134,9 @@
                     output = scene;
                 }
                 
-                // apply solid color wipe
-                output = lerp(output, float3(0, 0, 0), _WipeAlpha);
+                // apply solid color overlays
+                output = lerp(output, float3(1, 1, 1), _FlashBrightness);
+                output = lerp(output, float3(0, 0, 0), _BlackScreenAlpha);
                 return float4(output, 1);
             }
             
