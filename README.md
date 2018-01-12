@@ -28,3 +28,9 @@ This is a recreation of the rewind transition animation preceding Oxenfree's 'ti
 ![Oxenfree Rewind effect](previews/OxenfreeRewind.gif)
 
 Character model and walk animation created by [Clint Bellanger](http://www.patreon.com/clintbellanger). Retrieved from [OpenGameArt.org](https://opengameart.org/content/platformer-animations).
+
+## `BlackFlagAnimus.unity`
+
+This is a recreation of the Animus transition effects that are played when starting and finishing sequences in Assassin's Creed IV: Black Flag.
+
+![Black Flag Animus effect](previews/BlackFlagAnimus.gif)
