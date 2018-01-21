@@ -41,6 +41,8 @@ public class InfiniteForestEntranceEffect : MonoBehaviour
         mesh.SetTriangles(triangles.ToArray(), 0);
         mesh.SetNormals(uvDistances);
 
+        effectMat.SetVector("_InnerPoint", inner);
+
         return mesh;
     }
 

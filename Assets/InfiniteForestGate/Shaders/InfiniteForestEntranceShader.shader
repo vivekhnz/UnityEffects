@@ -40,13 +40,21 @@
 			float _UVScrollSpeed;
 			float _PyramidCutoff;
 			float _GridOpacityRamp;
+			float3 _InnerPoint;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				
 				o.distance = v.uv_distance.z;
-				o.vertex = UnityObjectToClipPos(v.vertex);
+
+				// twist vertices around center point
+				float2 relative = v.vertex.xy - _InnerPoint.xy;
+				float hypotenuse = length(relative);
+				float theta = atan2(relative.y, relative.x) + (sin(_Time.y) * o.distance);
+				float2 rotated = float2(cos(theta), sin(theta)) * hypotenuse;
+				float2 pos = _InnerPoint.xy + rotated;
+				o.vertex = UnityObjectToClipPos(float4(pos, v.vertex.zw));
 
 				// scroll UVs inward
 				o.uv = TRANSFORM_TEX(v.uv_distance.xy, _GridTexture);
