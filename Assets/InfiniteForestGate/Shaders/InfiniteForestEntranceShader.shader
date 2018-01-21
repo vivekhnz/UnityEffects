@@ -44,13 +44,14 @@
 			v2f vert (appdata v)
 			{
 				v2f o;
+				
+				o.distance = v.uv_distance.z;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 
 				// scroll UVs inward
 				o.uv = TRANSFORM_TEX(v.uv_distance.xy, _GridTexture);
 				o.uv += float2(0, -(_Time.y * _UVScrollSpeed) % 1);
 				
-				o.distance = v.uv_distance.z;
 				return o;
 			}
 
