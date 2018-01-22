@@ -48,13 +48,16 @@
 				
 				o.distance = v.uv_distance.z;
 
-				// twist vertices around center point
-				float2 relative = v.vertex.xy - _InnerPoint.xy;
-				float hypotenuse = length(relative);
-				float theta = atan2(relative.y, relative.x) + (sin(_Time.y) * o.distance);
-				float2 rotated = float2(cos(theta), sin(theta)) * hypotenuse;
-				float2 pos = _InnerPoint.xy + rotated;
-				o.vertex = UnityObjectToClipPos(float4(pos, v.vertex.zw));
+				float2 pos = v.vertex.xy - _InnerPoint.xy;
+				float hypotenuse = length(pos);
+				if (hypotenuse > 0)
+				{
+					// twist vertices around center point
+					float twist = sin((o.distance * 3) + _Time.y) * o.distance;
+					float theta = atan2(pos.y, pos.x) + twist;
+					pos = float2(cos(theta), sin(theta)) * hypotenuse;
+				}
+				o.vertex = UnityObjectToClipPos(float4(_InnerPoint.xy + pos, v.vertex.zw));
 
 				// scroll UVs inward
 				o.uv = TRANSFORM_TEX(v.uv_distance.xy, _GridTexture);
