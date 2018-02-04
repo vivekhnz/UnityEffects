@@ -77,7 +77,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GridOpacityRamp: 3
+    - _GridOpacityRamp: 4
     - _InvFade: 1
     - _JitterDelay: 0.1
     - _MaxJitterDisplacement: 0.02

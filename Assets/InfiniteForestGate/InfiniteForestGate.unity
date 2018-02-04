@@ -1054,4 +1054,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81d1365de1a79d44c9ff233ac1d3d31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Slices: 20
+  Slices: 50

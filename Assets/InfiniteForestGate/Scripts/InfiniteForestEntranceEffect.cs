@@ -31,15 +31,19 @@ public class InfiniteForestEntranceEffect : MonoBehaviour
 
         var vertices = new List<Vector3>();
         var triangles = new List<int>();
-        var uvDistances = new List<Vector3>();
+        var uvDistances = new List<Vector4>();
+
+        vertices.Add(inner);
+        uvDistances.Add(new Vector4(0.5f, 1, 1, 0.5f));
 
         AddTriangle(left, top, inner, 0, Slices, vertices, triangles, uvDistances);
         AddTriangle(top, right, inner, 1, Slices, vertices, triangles, uvDistances);
         AddTriangle(right, left, inner, 2, Slices, vertices, triangles, uvDistances);
+        // AddTriangle(right, left, inner, 0, Slices, vertices, triangles, uvDistances);
 
         mesh.SetVertices(vertices);
         mesh.SetTriangles(triangles.ToArray(), 0);
-        mesh.SetNormals(uvDistances);
+        mesh.SetTangents(uvDistances);
 
         effectMat.SetVector("_InnerPoint", inner);
 
@@ -47,24 +51,20 @@ public class InfiniteForestEntranceEffect : MonoBehaviour
     }
 
     private void AddTriangle(Vector4 a, Vector4 b, Vector4 c, int n, int slices,
-        List<Vector3> vertices, List<int> triangles, List<Vector3> uvDistances)
+        List<Vector3> vertices, List<int> triangles, List<Vector4> uvDistances)
     {
-        // store the UVs and distance to edge in the mesh normals
-        Vector3 uvA = new Vector3(1, 0, a.w);
-        Vector3 uvB = new Vector3(0, 0, b.w);
-        Vector3 uvC = new Vector3(0.5f, 1, c.w);
+        // store the UVs and distance to edge in the mesh tangents
+        Vector4 uvA = new Vector4(1, 0, a.w, 0);
+        Vector4 uvB = new Vector4(0, 0, b.w, 1);
+        Vector4 uvC = new Vector4(0.5f, 1, c.w, 0.5f);
 
-        int verticesPerTri = 3 + (2 * slices);
+        int verticesPerTri = 2 + (2 * slices);
         int start = verticesPerTri * n;
 
         // add inner-most triangle
-        triangles.Add(start + 0);
+        triangles.Add(0);
         triangles.Add(start + 1);
         triangles.Add(start + 2);
-
-        // add inner vertex
-        vertices.Add(c);
-        uvDistances.Add(uvC);
 
         float perSlice = 1f / (slices + 1);
         for (int i = 0; i < slices; i++)
@@ -74,8 +74,8 @@ public class InfiniteForestEntranceEffect : MonoBehaviour
             // add slice vertices
             vertices.Add(Vector3.Lerp(c, a, progress));
             vertices.Add(Vector3.Lerp(c, b, progress));
-            uvDistances.Add(Vector3.Lerp(uvC, uvB, progress));
-            uvDistances.Add(Vector3.Lerp(uvC, uvA, progress));
+            uvDistances.Add(Vector4.Lerp(uvC, uvB, progress));
+            uvDistances.Add(Vector4.Lerp(uvC, uvA, progress));
 
             // add slice triangles
             int sliceStart = start + (i * 2);

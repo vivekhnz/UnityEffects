@@ -12,6 +12,10 @@
 
 	SubShader
 	{
+		Blend One One
+		ZWrite Off
+		Cull Off
+
 		Pass
 		{
 			CGPROGRAM
@@ -23,7 +27,7 @@
 			struct appdata
 			{
 				float4 vertex : POSITION;
-				float3 uv_distance : NORMAL;
+				float4 uv_distance : TANGENT;
 			};
 
 			struct v2f
@@ -48,16 +52,32 @@
 				
 				o.distance = v.uv_distance.z;
 
-				float2 pos = v.vertex.xy - _InnerPoint.xy;
+				float2 pos = v.vertex.xy - _InnerPoint;
 				float hypotenuse = length(pos);
 				if (hypotenuse > 0)
 				{
+					// calculate progress through animation
+					float t = (_Time.y * 0.75) % 1.75;
+					float turningPoint = o.distance + 0.25;
+					float progress = step(t, turningPoint);
+
+					// return to initial position at a slower rate
+					float inCurve = 2 * t;
+					float maxOutCurve = t + turningPoint;
+					float outCurve = lerp(inCurve, maxOutCurve, (sin(_Time.y) + 1) / 2);
+					float curve = (inCurve * progress) + (outCurve * (1 - progress));
+					
+					// calculate amount to twist
+					float twist = (-2 * pow(curve - (2 * o.distance) - 0.5, 2)) + 0.5;
+					twist = max(twist, 0);
+					twist *= pow(o.distance, 0.25);
+
 					// twist vertices around center point
-					float twist = sin((o.distance * 3) + _Time.y) * o.distance;
 					float theta = atan2(pos.y, pos.x) + twist;
-					pos = float2(cos(theta), sin(theta)) * hypotenuse;
+					float scale = 1 - (pow(o.distance, 2) * v.uv_distance.w * twist);
+					pos.xy = float2(cos(theta), sin(theta)) * hypotenuse * scale;
 				}
-				o.vertex = UnityObjectToClipPos(float4(_InnerPoint.xy + pos, v.vertex.zw));
+				o.vertex = UnityObjectToClipPos(float4(_InnerPoint + pos, v.vertex.zw));
 
 				// scroll UVs inward
 				o.uv = TRANSFORM_TEX(v.uv_distance.xy, _GridTexture);
@@ -74,8 +94,9 @@
 
 				// fade out grid at the outer edges
 				gridOpacity *= pow(i.distance, _GridOpacityRamp);
-				
-				float3 result = _BaseColor + (grid * gridOpacity);
+
+				// float3 result = _BaseColor + (grid * gridOpacity);
+				float3 result = grid * gridOpacity;
 				return fixed4(result, 1);
 			}
 			ENDCG
