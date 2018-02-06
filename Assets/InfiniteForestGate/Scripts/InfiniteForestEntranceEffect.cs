@@ -39,7 +39,6 @@ public class InfiniteForestEntranceEffect : MonoBehaviour
         AddTriangle(left, top, inner, 0, Slices, vertices, triangles, uvDistances);
         AddTriangle(top, right, inner, 1, Slices, vertices, triangles, uvDistances);
         AddTriangle(right, left, inner, 2, Slices, vertices, triangles, uvDistances);
-        // AddTriangle(right, left, inner, 0, Slices, vertices, triangles, uvDistances);
 
         mesh.SetVertices(vertices);
         mesh.SetTriangles(triangles.ToArray(), 0);

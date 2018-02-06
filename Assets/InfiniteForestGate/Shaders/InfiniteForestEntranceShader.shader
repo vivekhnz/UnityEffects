@@ -4,32 +4,73 @@
 	{
 		_GridTexture ("Grid texture", 2D) = "white" {}
 
-		_BaseColor ("Base color", Color) = (0, 0, 0, 1)
 		_UVScrollSpeed ("UV inward scroll speed", Float) = 1
 		_PyramidCutoff ("Pyramid cutoff", Float) = 0.9
 		_GridOpacityRamp ("Grid opacity ramp", Float) = 1
+		_BaseColor ("Base color", Color) = (0, 0, 0, 1)
 	}
 
 	SubShader
 	{
-		Blend One One
-		ZWrite Off
-		Cull Off
+		
+        CGINCLUDE
 
+		#pragma vertex vert
+		#pragma fragment frag
+		
+		#include "UnityCG.cginc"
+
+		struct appdata
+		{
+			float4 vertex : POSITION;
+			float4 uv_distance : TANGENT;
+		};
+
+		ENDCG
+
+		// Face
 		Pass
 		{
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			
-			#include "UnityCG.cginc"
+			// don't write to the Z-buffer so the grid can be drawn on top
+			ZWrite Off
 
-			struct appdata
+			CGPROGRAM
+			
+			struct v2f
 			{
-				float4 vertex : POSITION;
-				float4 uv_distance : TANGENT;
+				float4 vertex : SV_POSITION;
 			};
 
+			float3 _BaseColor;
+			
+			v2f vert (appdata v)
+			{
+				v2f o;
+				
+				// zero out the Z axis so we have a flat triangle
+				o.vertex = UnityObjectToClipPos(float4(v.vertex.xy, 0, v.vertex.w));
+
+				return o;
+			}
+
+			fixed4 frag (v2f i) : SV_Target
+			{
+				return fixed4(_BaseColor, 1);
+			}
+			
+			ENDCG
+		}
+		
+		// Grid
+		Pass
+		{
+			// use additive blending
+			Blend One One
+			ZWrite Off
+			Cull Off
+
+			CGPROGRAM
+			
 			struct v2f
 			{
 				float4 vertex : SV_POSITION;
@@ -40,7 +81,6 @@
             sampler2D _GridTexture;
 			float4 _GridTexture_ST;
 
-			float3 _BaseColor;
 			float _UVScrollSpeed;
 			float _PyramidCutoff;
 			float _GridOpacityRamp;
@@ -94,10 +134,7 @@
 
 				// fade out grid at the outer edges
 				gridOpacity *= pow(i.distance, _GridOpacityRamp);
-
-				// float3 result = _BaseColor + (grid * gridOpacity);
-				float3 result = grid * gridOpacity;
-				return fixed4(result, 1);
+				return fixed4(grid * gridOpacity, 1);
 			}
 			ENDCG
 		}

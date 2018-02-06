@@ -1055,3 +1055,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Slices: 50
+  BaseColor: {r: 0.1454909, g: 0.22397631, b: 0.28676468, a: 1}
