@@ -52,23 +52,47 @@
 			float3 _BaseColor;
 			float _PyramidCutoff;
 			float _GridOpacityRamp;
-			
+			float3 _InnerPoint;
+
 			v2f vert (appdata v)
 			{
 				v2f o;
 				
-				// zero out the Z axis so we have a flat triangle
-				o.vertex = UnityObjectToClipPos(float4(v.vertex.xyz, v.vertex.w));
-
 				o.distance = v.uv_distance.z;
 
+				float2 pos = v.vertex.xy - _InnerPoint;
+				float hypotenuse = length(pos);
+				if (hypotenuse > 0)
+				{
+					// calculate progress through animation
+					float t = (_Time.y * 0.75) % 1.75;
+					float turningPoint = o.distance + 0.25;
+					float progress = step(t, turningPoint);
+
+					// return to initial position at a slower rate
+					float inCurve = 2 * t;
+					float maxOutCurve = t + turningPoint;
+					float outCurve = lerp(inCurve, maxOutCurve, (sin(_Time.y) + 1) / 2);
+					float curve = (inCurve * progress) + (outCurve * (1 - progress));
+					
+					// calculate amount to twist
+					float twist = (-2 * pow(curve - (2 * o.distance) - 0.5, 2)) + 0.5;
+					twist = max(twist, 0);
+					twist *= pow(o.distance, 0.25);
+
+					// twist vertices around center point
+					float theta = atan2(pos.y, pos.x) + twist;
+					pos.xy = float2(cos(theta), sin(theta)) * hypotenuse;
+				}
+				o.vertex = UnityObjectToClipPos(float4(_InnerPoint + pos, v.vertex.zw));
+				
 				return o;
 			}
 
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float tintOpacity = step(i.distance, _PyramidCutoff);
-				tintOpacity *= pow(i.distance, _GridOpacityRamp / 4);
+				tintOpacity *= pow(i.distance, _GridOpacityRamp / 5);
 
 				return fixed4(_BaseColor, tintOpacity);
 			}
