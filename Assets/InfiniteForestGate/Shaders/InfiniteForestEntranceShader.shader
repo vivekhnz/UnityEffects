@@ -12,7 +12,12 @@
 
 	SubShader
 	{
-		
+		Tags
+		{
+			"Queue"="Transparent"
+			"RenderType"="Transparent"
+		}
+
         CGINCLUDE
 
 		#pragma vertex vert
@@ -31,6 +36,8 @@
 		// Face
 		Pass
 		{
+			// alpha blending
+			Blend SrcAlpha OneMinusSrcAlpha
 			// don't write to the Z-buffer so the grid can be drawn on top
 			ZWrite Off
 
@@ -39,23 +46,31 @@
 			struct v2f
 			{
 				float4 vertex : SV_POSITION;
+				float distance : NORMAL;
 			};
 
 			float3 _BaseColor;
+			float _PyramidCutoff;
+			float _GridOpacityRamp;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				
 				// zero out the Z axis so we have a flat triangle
-				o.vertex = UnityObjectToClipPos(float4(v.vertex.xy, 0, v.vertex.w));
+				o.vertex = UnityObjectToClipPos(float4(v.vertex.xyz, v.vertex.w));
+
+				o.distance = v.uv_distance.z;
 
 				return o;
 			}
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				return fixed4(_BaseColor, 1);
+				float tintOpacity = step(i.distance, _PyramidCutoff);
+				tintOpacity *= pow(i.distance, _GridOpacityRamp / 4);
+
+				return fixed4(_BaseColor, tintOpacity);
 			}
 			
 			ENDCG

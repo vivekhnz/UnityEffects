@@ -429,6 +429,18 @@ Transform:
   m_Father: {fileID: 931518396}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &592906317 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100002, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
+  m_PrefabInternal: {fileID: 1996824096}
+--- !u!45 &592906322
+Skybox:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 592906317}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: 57665070aa746c846a1e80f4e5586cda, type: 2}
 --- !u!1 &931518395
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,7 +951,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 2000000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_ClearFlags
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2000000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 2}
       propertyPath: m_CullingMask.m_Bits
@@ -1055,4 +1067,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Slices: 50
-  BaseColor: {r: 0.1454909, g: 0.22397631, b: 0.28676468, a: 1}
