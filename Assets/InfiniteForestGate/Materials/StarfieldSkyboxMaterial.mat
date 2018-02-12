@@ -140,7 +140,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _BackgroundColor: {r: 0, g: 0.09803922, b: 0.14117648, a: 1}
+    - _BackgroundColor: {r: 0.024221454, g: 0.1503749, b: 0.20588237, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GroundColor: {r: 0.369, g: 0.349, b: 0.341, a: 1}

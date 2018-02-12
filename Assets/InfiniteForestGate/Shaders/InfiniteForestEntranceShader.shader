@@ -47,7 +47,10 @@
 			{
 				float4 vertex : SV_POSITION;
 				float distance : NORMAL;
+				float3 screenUV : TANGENT;
 			};
+
+			sampler2D _PortalSkyboxTexture;
 
 			float3 _BaseColor;
 			float _PyramidCutoff;
@@ -86,15 +89,19 @@
 				}
 				o.vertex = UnityObjectToClipPos(float4(_InnerPoint + pos, v.vertex.zw));
 				
+				float4 screenPos = ComputeScreenPos(o.vertex);
+				o.screenUV = float3(screenPos.xy, screenPos.w);
+				
 				return o;
 			}
 
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float tintOpacity = step(i.distance, _PyramidCutoff);
-				tintOpacity *= pow(i.distance, _GridOpacityRamp / 5);
+				tintOpacity *= pow(i.distance, _GridOpacityRamp / 4);
 
-				return fixed4(_BaseColor, tintOpacity);
+				float3 skybox = tex2D(_PortalSkyboxTexture, i.screenUV.xy / i.screenUV.z);
+				return fixed4(lerp(skybox, _BaseColor, tintOpacity), 1);
 			}
 			
 			ENDCG
