@@ -5,6 +5,7 @@
 		_StarfieldTexture ("Starfield texture", 2D) = "white" {}
 		_BackgroundColor ("Background color", Color) = (0, 0, 0, 1)
 		_RotationSpeed ("Rotation speed", Float) = 0.03
+		_StarfieldOpacity ("Starfield opacity", Float) = 1
 	}
 
 	SubShader
@@ -43,6 +44,7 @@
 		sampler2D _StarfieldTexture;
 		float3 _BackgroundColor;
 		float _RotationSpeed;
+		float _StarfieldOpacity;
 
 		v2f vert (appdata v)
 		{
@@ -74,7 +76,7 @@
 			rotated = float2(cos(theta), sin(theta)) * hypotenuse;
 			starfield += tex2D(_StarfieldTexture, frac((rotated) * 2.0));
 
-			return fixed4(_BackgroundColor + starfield.rgb, 1);
+			return fixed4(_BackgroundColor + (starfield.rgb * _StarfieldOpacity), 1);
 		}
 
 		fixed4 scrollStarfield(float2 uv, float2 direction)
@@ -85,7 +87,7 @@
 			starfield += tex2D(_StarfieldTexture, frac((uv * 1.0) + amount));
 			starfield += tex2D(_StarfieldTexture, frac((uv * 1.5) + amount));
 			starfield += tex2D(_StarfieldTexture, frac((uv * 2) + amount));
-			return fixed4(_BackgroundColor + starfield.rgb, 1);
+			return fixed4(_BackgroundColor + (starfield.rgb * _StarfieldOpacity), 1);
 		}
 
 		ENDCG

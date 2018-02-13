@@ -47,61 +47,40 @@
 			{
 				float4 vertex : SV_POSITION;
 				float distance : NORMAL;
-				float3 screenUV : TANGENT;
+				float4 screenUVDepth : TANGENT;
 			};
 
 			sampler2D _PortalSkyboxTexture;
 
 			float3 _BaseColor;
-			float _PyramidCutoff;
 			float _GridOpacityRamp;
-			float3 _InnerPoint;
 
 			v2f vert (appdata v)
 			{
 				v2f o;
 				
 				o.distance = v.uv_distance.z;
-
-				float2 pos = v.vertex.xy - _InnerPoint;
-				float hypotenuse = length(pos);
-				if (hypotenuse > 0)
-				{
-					// calculate progress through animation
-					float t = (_Time.y * 0.75) % 1.75;
-					float turningPoint = o.distance + 0.25;
-					float progress = step(t, turningPoint);
-
-					// return to initial position at a slower rate
-					float inCurve = 2 * t;
-					float maxOutCurve = t + turningPoint;
-					float outCurve = lerp(inCurve, maxOutCurve, (sin(_Time.y) + 1) / 2);
-					float curve = (inCurve * progress) + (outCurve * (1 - progress));
-					
-					// calculate amount to twist
-					float twist = (-2 * pow(curve - (2 * o.distance) - 0.5, 2)) + 0.5;
-					twist = max(twist, 0);
-					twist *= pow(o.distance, 0.25);
-
-					// twist vertices around center point
-					float theta = atan2(pos.y, pos.x) + twist;
-					pos.xy = float2(cos(theta), sin(theta)) * hypotenuse;
-				}
-				o.vertex = UnityObjectToClipPos(float4(_InnerPoint + pos, v.vertex.zw));
+				o.vertex = UnityObjectToClipPos(v.vertex);
 				
 				float4 screenPos = ComputeScreenPos(o.vertex);
-				o.screenUV = float3(screenPos.xy, screenPos.w);
+				float depth = -UnityObjectToViewPos(v.vertex).z * _ProjectionParams.w;
+				o.screenUVDepth = float4(screenPos.xy, screenPos.w, depth);
 				
 				return o;
 			}
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				float tintOpacity = step(i.distance, _PyramidCutoff);
-				tintOpacity *= pow(i.distance, _GridOpacityRamp / 4);
-
-				float3 skybox = tex2D(_PortalSkyboxTexture, i.screenUV.xy / i.screenUV.z);
-				return fixed4(lerp(skybox, _BaseColor, tintOpacity), 1);
+				// fade out skybox towards the edges
+				float2 correctedScreenUV = i.screenUVDepth.xy / i.screenUVDepth.z;
+				float3 skybox = tex2D(_PortalSkyboxTexture, correctedScreenUV);
+				skybox = lerp(skybox, _BaseColor, 1 - i.distance);
+				
+				// apply a dark tint at the edges
+				float tintOpacity = pow(i.distance, _GridOpacityRamp / 4);
+				skybox = lerp(_BaseColor / 2, skybox, tintOpacity * 2);
+				
+				return fixed4(skybox, 1);
 			}
 			
 			ENDCG
