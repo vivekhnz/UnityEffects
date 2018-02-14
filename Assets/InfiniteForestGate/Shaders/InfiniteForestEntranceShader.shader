@@ -78,9 +78,15 @@
 				
 				// apply a dark tint at the edges
 				float tintOpacity = pow(i.distance, _GridOpacityRamp / 4);
-				skybox = lerp(_BaseColor / 2, skybox, tintOpacity * 2);
+				float3 output = lerp(_BaseColor / 2, skybox, tintOpacity * 2);
+
+				// draw edge lattice
+				float a = 0.03;
+				float b = 0.06;
+				float p = (b - i.distance) / (b - a);
+				output = lerp(output, float3(1, 1, 1), min(max(p, 0), 1));
 				
-				return fixed4(skybox, 1);
+				return fixed4(output, 1);
 			}
 			
 			ENDCG
