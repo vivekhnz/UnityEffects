@@ -77,6 +77,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _EdgeWidth: 0.04
     - _EnableExternalAlpha: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -84,6 +85,8 @@ Material:
     - _GridOpacityRamp: 3
     - _InvFade: 1
     - _JitterDelay: 0.1
+    - _LatticeMaxLength: 0.2
+    - _LatticeSliceWidth: 0.015
     - _MaxJitterDisplacement: 0.02
     - _MaxTintIntensity: 0.05
     - _MaxWaveDisplacement: 0.05
@@ -96,7 +99,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _UVScrollSpeed: 0.5
+    - _UVScrollSpeed: 0.3
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:

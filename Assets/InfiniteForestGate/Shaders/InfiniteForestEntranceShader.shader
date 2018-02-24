@@ -8,6 +8,15 @@
 		_PyramidCutoff ("Pyramid cutoff", Float) = 0.9
 		_GridOpacityRamp ("Grid opacity ramp", Float) = 1
 		_BaseColor ("Base color", Color) = (0, 0, 0, 1)
+		
+		_EdgeWidth ("Edge width", Float) = 0.03
+		_LatticeMaxLength ("Lattice max length", Float) = 0.3
+		_LatticeSliceWidth ("Lattice slice width", Float) = 0.015
+		_LatticeMaxBlockLength ("Lattice max block length", Float) = 0.1
+
+		_LatticeInitialOpacity ("Lattice initial opacity", Float) = 0.5
+		_LatticeMaxOpacity ("Lattice max opacity", Float) = 0.75
+		_LatticeOpacityDropoff ("Lattice opacity dropoff threshold", Float) = 0.9
 	}
 
 	SubShader
@@ -46,7 +55,7 @@
 			struct v2f
 			{
 				float4 vertex : SV_POSITION;
-				float distance : NORMAL;
+				float2 distance : NORMAL;
 				float4 screenUVDepth : TANGENT;
 			};
 
@@ -54,12 +63,67 @@
 
 			float3 _BaseColor;
 			float _GridOpacityRamp;
+			float3 _InnerPoint;
+
+			float _LatticeMaxLength;
+			float _LatticeSliceWidth;
+			float _LatticeMaxBlockLength;
+
+			float _LatticeInitialOpacity;
+			float _LatticeMaxOpacity;
+			float _LatticeOpacityDropoff;
+
+			float _EdgeWidth;
+
+			// adapted from https://stackoverflow.com/questions/5149544/can-i-generate-a-random-number-inside-a-pixel-shader/10625698#10625698
+			float random(float2 p)
+			{
+				float2 K1 = float2(
+					23.14069263277926, // e^pi (Gelfond's constant)
+					2.665144142690225 // 2^sqrt(2) (Gelfondâ€“Schneider constant)
+				);
+				return frac(cos(dot(p,K1)) * 12345.6789);
+			}
+
+			float latticeBlock(float dist, float seed)
+			{
+				seed = seed % 1;
+				float blockLength = _LatticeMaxBlockLength * seed;
+				float cutoff = seed * _LatticeMaxLength;
+				
+				float t = (_Time.y + 10) * 0.1;
+				float cycleProgress = t % (blockLength + cutoff);
+				
+				float upperBound = min(cycleProgress, cutoff);
+				float lowerBound = min(cycleProgress - blockLength, cutoff);
+
+				if (dist > lowerBound && dist < upperBound)
+				{
+					float initial = _LatticeInitialOpacity;
+					float max = _LatticeMaxOpacity;
+					float dropoff = _LatticeOpacityDropoff;
+
+					float p = dist / cutoff;
+					float inCurve = ((p * (max - initial)) / dropoff) + initial;
+					float outCurve = (max * (1 - p)) / (1 - dropoff);
+					float s = step(p, dropoff);
+					return (inCurve * s) + (outCurve * (1 - s));
+				}
+				return 0;
+			}
+
+			float blend(float front, float back)
+			{
+				float m = ceil(front) * 0.75;
+				return (front * m) + (back * (1 - m));
+			}
 
 			v2f vert (appdata v)
 			{
 				v2f o;
+				v.vertex.z = 0;
 				
-				o.distance = v.uv_distance.z;
+				o.distance = v.uv_distance.zw;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				
 				float4 screenPos = ComputeScreenPos(o.vertex);
@@ -74,17 +138,35 @@
 				// fade out skybox towards the edges
 				float2 correctedScreenUV = i.screenUVDepth.xy / i.screenUVDepth.z;
 				float3 skybox = tex2D(_PortalSkyboxTexture, correctedScreenUV);
-				skybox = lerp(skybox, _BaseColor, 1 - i.distance);
+				skybox = lerp(skybox, _BaseColor, 1 - i.distance.x);
 				
 				// apply a dark tint at the edges
-				float tintOpacity = pow(i.distance, _GridOpacityRamp / 4);
+				float tintOpacity = pow(i.distance.x, _GridOpacityRamp / 4);
 				float3 output = lerp(_BaseColor / 2, skybox, tintOpacity * 2);
 
+				// divide the edge into discrete slices
+				float div = i.distance.y / _LatticeSliceWidth;
+				float slice = _LatticeSliceWidth * floor(div);
+				
+				// vary slice widths
+				if (frac(div) > 0.666)
+				{
+					slice -= 1;
+				}
+				float seed = random(slice.xx);
+
 				// draw edge lattice
-				float a = 0.03;
-				float b = 0.06;
-				float p = (b - i.distance) / (b - a);
-				output = lerp(output, float3(1, 1, 1), min(max(p, 0), 1));
+				float opacity = latticeBlock(i.distance.x, seed);
+				for (int n = 0; n < 3; n++)
+				{
+					float s = seed + (0.1 * n);
+					opacity = blend(latticeBlock(i.distance.x, s), opacity);
+				}
+				float3 lattice = opacity.xxx;
+
+				// draw hard edge
+				float p = ((_EdgeWidth * 2) - i.distance.x) / _EdgeWidth;
+				output = lerp(output + lattice, float3(1, 1, 1), min(max(p, 0), 1));
 				
 				return fixed4(output, 1);
 			}
@@ -128,7 +210,7 @@
 				if (hypotenuse > 0)
 				{
 					// calculate progress through animation
-					float t = (_Time.y * 0.75) % 1.75;
+					float t = (_Time.y * 0.4) % 1.75;
 					float turningPoint = o.distance + 0.25;
 					float progress = step(t, turningPoint);
 
