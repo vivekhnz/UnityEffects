@@ -149,10 +149,8 @@
 				float slice = _LatticeSliceWidth * floor(div);
 				
 				// vary slice widths
-				if (frac(div) > 0.666)
-				{
-					slice -= 1;
-				}
+				float variance = max(floor((4 * frac(div)) - 1), 0) / 3;
+				slice += variance;
 				float seed = random(slice.xx);
 
 				// draw edge lattice

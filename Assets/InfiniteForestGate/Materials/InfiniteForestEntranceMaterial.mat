@@ -85,8 +85,12 @@ Material:
     - _GridOpacityRamp: 3
     - _InvFade: 1
     - _JitterDelay: 0.1
+    - _LatticeInitialOpacity: 0.5
+    - _LatticeMaxBlockLength: 0.1
     - _LatticeMaxLength: 0.2
-    - _LatticeSliceWidth: 0.015
+    - _LatticeMaxOpacity: 0.75
+    - _LatticeOpacityDropoff: 0.9
+    - _LatticeSliceWidth: 0.02
     - _MaxJitterDisplacement: 0.02
     - _MaxTintIntensity: 0.05
     - _MaxWaveDisplacement: 0.05
