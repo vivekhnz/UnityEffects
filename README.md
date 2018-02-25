@@ -3,6 +3,7 @@ A collection of video game effects recreated in Unity.
 
 |Effect                                           |Game                             |Developer          |
 |-------------------------------------------------|---------------------------------|-------------------|
+|[Infinite Forest Gate](Assets/InfiniteForestGate)|*Destiny 2: Curse of Osiris*     |Bungie             |
 |[Taken Puddle](Assets/TakenPuddle)               |*Destiny: The Taken King*        |Bungie             |
 |[SIVA Density Critical](Assets/SIVADensity)      |*Destiny: Rise of Iron*          |Bungie             |
 |[Promethean Dissolve](Assets/PrometheanDissolve) |*Halo 4*                         |343 Industries     |
